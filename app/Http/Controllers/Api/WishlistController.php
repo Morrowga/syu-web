@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\WishlistCreateRequest;
+use App\Interfaces\Api\WishlistRepositoryInterface;
 
 class WishlistController extends Controller
 {

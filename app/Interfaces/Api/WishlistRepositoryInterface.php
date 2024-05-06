@@ -6,5 +6,5 @@ use Illuminate\Http\Request;
 
 interface WishlistRepositoryInterface
 {
-    public function createWishlist();
+    public function createWishlist(Request $request);
 }

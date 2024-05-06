@@ -22,7 +22,7 @@ class WishlistCreateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "products" => ['required', 'string']
+            "products" => ['required']
         ];
     }
 }
