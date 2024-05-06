@@ -6,5 +6,7 @@ use Illuminate\Http\Request;
 
 interface FeedsRepositoryInterface
 {
-    public function getFeeds(Request $request);
+    public function getProducts(Request $request);
+
+    public function getCategories();
 }

@@ -13,12 +13,14 @@ use App\Repositories\CategoryRepository;
 use App\Repositories\Api\FeedsRepository;
 use App\Interfaces\SizeRepositoryInterface;
 use App\Interfaces\UserRepositoryInterface;
+use App\Repositories\Api\WishlistRepository;
 use App\Interfaces\ProductRepositoryInterface;
 use App\Interfaces\QualityRepositoryInterface;
 use App\Interfaces\SettingRepositoryInterface;
 use App\Interfaces\Api\AuthRepositoryInterface;
 use App\Interfaces\CategoryRepositoryInterface;
 use App\Interfaces\Api\FeedsRepositoryInterface;
+use App\Interfaces\Api\WishlistRepositoryInterface;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -37,6 +39,7 @@ class AppServiceProvider extends ServiceProvider
         //api
         $this->app->bind(AuthRepositoryInterface::class, AuthRepository::class);
         $this->app->bind(FeedsRepositoryInterface::class, FeedsRepository::class);
+        $this->app->bind(WishlistRepositoryInterface::class, WishlistRepository::class);
 
     }
 

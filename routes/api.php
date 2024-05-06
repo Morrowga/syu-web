@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\FeedsController;
+use App\Http\Controllers\Api\WishlistController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,5 +33,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 
     //feeds
-    Route::get('/feeds', [FeedsController::class, 'getFeeds']);
+    Route::get('/feeds', [FeedsController::class, 'getProducts']);
+    Route::get('/categories', [FeedsController::class, 'getCategories']);
+    Route::post('/wishlist', [WishlistController::class, 'createWishlist']);
 });

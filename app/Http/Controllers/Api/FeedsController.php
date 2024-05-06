@@ -15,9 +15,13 @@ class FeedsController extends Controller
         $this->feedsRepository = $feedsRepository;
     }
 
-    public function getFeeds(Request $request)
+    public function getProducts(Request $request)
     {
-        return $this->feedsRepository->getFeeds($request);
+        return $this->feedsRepository->getProducts($request);
     }
 
+    public function getCategories()
+    {
+        return $this->feedsRepository->getCategories();
+    }
 }
