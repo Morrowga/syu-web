@@ -77,7 +77,7 @@ class ProductRepository implements ProductRepositoryInterface
 
                 DB::commit();
 
-                return $this->success('Category has been updated successfully.');
+                return $this->success('Product has been updated successfully.');
 
             }
 

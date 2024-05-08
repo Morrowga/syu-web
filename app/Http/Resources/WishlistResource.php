@@ -14,6 +14,13 @@ class WishlistResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            "id" => $this->id,
+            "name" => $this->name,
+            "category_id" => $this->category_id,
+            "is_active" => $this->is_active,
+            "image_url" => $this->image_url,
+            "category" => new CategoryResource($this->category)
+        ];
     }
 }

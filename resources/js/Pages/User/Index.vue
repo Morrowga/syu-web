@@ -43,8 +43,8 @@ const columns = ref([
         field: 'gender'
     },
     {
-        label: 'City',
-        field: 'city'
+        label: 'Shipping City',
+        field: 'shipping_city_id'
     },
     {
         label: 'Manage',

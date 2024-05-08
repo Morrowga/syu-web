@@ -25,11 +25,11 @@ const bannerForm = useForm
 
 const settingForm = useForm
 ({
-     waiting_days: props.setting?.waiting_days,
      splash_slogan: props.setting?.splash_slogan,
      app_bg_color: props.setting?.app_bg_color,
      app_text_color: props.setting?.app_text_color,
      app_button_color: props.setting?.app_button_color,
+     expire_day: props.setting?.expire_day,
      categories: [],
      setting_type: 'general'
 });
@@ -79,7 +79,7 @@ const bannerSubmitEvent = () =>
 const generalSubmitEvent = () =>
 {
     settingForm.categories = JSON.stringify(props.categories);
-
+    console.log(settingForm)
     settingForm.patch(route('settings.update', props.setting?.id), {
         preserveScroll: true,
         onSuccess: () => {
@@ -125,7 +125,17 @@ const generalSubmitEvent = () =>
                                                 oninput="this.value = Math.abs(this.value)"
                                                 class="mt-2 block w-full"
                                             />
-                                            <FormError v-if="errors.waiting_days" :message="errors.waiting_days" />
+                                        </div>
+                                        <div class="my-5">
+                                            <InputLabel for="limitation" :value="category.name + ' Limitation'" :required="true" />
+                                            <TextInput
+                                                v-model="category.limitation"
+                                                placeholder="Enter Limitation"
+                                                id="limitation"
+                                                type="number"
+                                                oninput="this.value = Math.abs(this.value)"
+                                                class="mt-2 block w-full"
+                                            />
                                         </div>
                                     </div>
                                 </VCol>
@@ -202,6 +212,19 @@ const generalSubmitEvent = () =>
                                             class="mt-2 block w-full"
                                         />
                                         <FormError v-if="errors.splash_slogan" :message="errors.splash_slogan" />
+                                    </div>
+                                </VCol>
+                                <VCol cols="4">
+                                    <div class="my-2">
+                                        <InputLabel for="expire_day" value="Order Expire Day" :required="true" />
+                                        <TextInput
+                                            v-model="settingForm.expire_day"
+                                            placeholder="Enter expire day"
+                                            id="expire_day"
+                                            type="text"
+                                            class="mt-2 block w-full"
+                                        />
+                                        <FormError v-if="errors.expire_day" :message="errors.expire_day" />
                                     </div>
                                 </VCol>
                             </VRow>

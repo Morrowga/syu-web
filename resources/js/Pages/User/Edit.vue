@@ -2,13 +2,14 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
+import SelectObject from '@/Components/SelectObject.vue';
 import TextInput from '@/Components/TextInput.vue';
 import SelectArray from '@/Components/SelectArray.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import FormError from '@/Components/FormError.vue';
 import { ref, defineProps } from 'vue';
 
-const props = defineProps(['errors', 'user']);
+const props = defineProps(['errors', 'user', 'shipping_cities']);
 
 const imageUrl = ref(props.user?.avatar);
 
@@ -16,7 +17,7 @@ const form = useForm({
      name: props.user?.name,
      email: props.user?.email,
      msisdn: props.user?.msisdn,
-     city: props.user?.city,
+     shipping_city_id: props.user?.shipping_city_id,
      shipping_address: props.user?.shipping_address,
      gender: props.user?.gender,
 });
@@ -67,6 +68,7 @@ const updateUser = () => {
                                                     <TextInput
                                                         v-model="form.email"
                                                         id="email"
+                                                        placeholder="Enter email"
                                                         type="email"
                                                         class="mt-2 block w-full"
                                                     />
@@ -83,12 +85,12 @@ const updateUser = () => {
                                                     <FormError v-if="errors.msisdn" :message="errors.msisdn" />
                                                 </div>
                                                 <div class="my-5">
-                                                    <InputLabel for="city" value="City" />
-                                                    <TextInput
-                                                        v-model="form.city"
-                                                        id="city"
+                                                    <InputLabel for="shipping_city_id" value="Shipping City" />
+                                                    <SelectObject
+                                                        id="shipping_city_id"
                                                         type="text"
                                                         class="mt-2 block w-full"
+                                                        :items="props.shipping_cities" v-model="form.shipping_city_id"
                                                     />
                                                 </div>
                                                 <div class="my-5">
@@ -96,6 +98,7 @@ const updateUser = () => {
                                                     <TextInput
                                                         v-model="form.shipping_address"
                                                         id="shipping_address"
+                                                        placeholder="Enter shipping address"
                                                         type="text"
                                                         class="mt-2 block w-full"
                                                     />

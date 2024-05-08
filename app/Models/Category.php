@@ -18,7 +18,7 @@ class Category extends Model
 
     protected $table = 'categories';
 
-    protected $fillable = ['name', 'is_active', 'waiting_days'];
+    protected $fillable = ['name', 'is_active', 'waiting_days', 'limitation'];
 
     public function qualities()
     {

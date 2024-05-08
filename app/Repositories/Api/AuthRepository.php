@@ -5,6 +5,7 @@ namespace App\Repositories\Api;
 use App\Models\OTP;
 use App\Models\User;
 use App\Models\Setting;
+use App\Models\ShippingCity;
 use App\Traits\ApiResponses;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -12,6 +13,7 @@ use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Resources\SettingResource;
+use App\Http\Resources\ShippingCityResource;
 use App\Interfaces\Api\AuthRepositoryInterface;
 
 class AuthRepository implements AuthRepositoryInterface
@@ -33,7 +35,6 @@ class AuthRepository implements AuthRepositoryInterface
                     'name' => 'syuuser_' . generateRandomString(10),
                     'password' => Hash::make('syu2024'),
                     'email' => null,
-                    'city' => null,
                     'is_active' => 1,
                     'shipping_address' => null,
                     'gender' => 'empty'
@@ -106,7 +107,7 @@ class AuthRepository implements AuthRepositoryInterface
 
             }
 
-            return $this->error('Phone number does not exist.');
+            return $this->error('Phone number does not exist.', 400);
 
         } catch (\Exception $e) {
 
@@ -165,7 +166,21 @@ class AuthRepository implements AuthRepositoryInterface
 
             DB::rollback();
 
-            return $this->error($e->getMessage());
+            return $this->error($e->getMessage(), 500);
+        }
+    }
+
+    public function getShippingCities()
+    {
+        try {
+
+            $shipping_cities = ShippingCity::where('is_active', 1)->orderBy('name_en', 'ASC')->get();
+
+            return $this->success('Shipping Cities fetched successfully.', ShippingCityResource::collection($shipping_cities));
+
+        } catch (\Exception $e) {
+
+            return $this->error($e->getMessage(), 500);
         }
     }
 

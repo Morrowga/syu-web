@@ -51,6 +51,7 @@ class SettingRepository implements SettingRepositoryInterface
                             $categoriesFromEloquent = Category::where('id', $category['id'])->first();
                             $categoriesFromEloquent->is_active = $category['is_active'];
                             $categoriesFromEloquent->waiting_days = $category['waiting_days'];
+                            $categoriesFromEloquent->limitation = $category['limitation'];
                             $categoriesFromEloquent->save();
                         }
                     }

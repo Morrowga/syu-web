@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Traits\UUID;
 use App\Models\Product;
+use App\Models\ShippingCity;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -25,7 +26,7 @@ class User extends Authenticatable
         'password',
         'msisdn',
         'gender',
-        'city',
+        'shipping_city_id',
         'shipping_address',
         'is_active',
         'is_above_eighteen'
@@ -64,5 +65,10 @@ class User extends Authenticatable
     public function wishlists()
     {
         return $this->belongsToMany(Product::class, 'wishlists');
+    }
+
+    public function shippingcity()
+    {
+        return $this->belongsTo(ShippingCity::class, 'shipping_city_id');
     }
 }

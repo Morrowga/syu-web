@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Repositories\SizeRepository;
 use App\Repositories\UserRepository;
+use App\Repositories\OrderRepository;
 use App\Repositories\ProductRepository;
 use App\Repositories\QualityRepository;
 use App\Repositories\SettingRepository;
@@ -13,14 +14,21 @@ use App\Repositories\CategoryRepository;
 use App\Repositories\Api\FeedsRepository;
 use App\Interfaces\SizeRepositoryInterface;
 use App\Interfaces\UserRepositoryInterface;
+use App\Interfaces\OrderRepositoryInterface;
 use App\Repositories\Api\WishlistRepository;
+use App\Repositories\ShippingCityRepository;
+use App\Repositories\PaymentMethodRepository;
 use App\Interfaces\ProductRepositoryInterface;
 use App\Interfaces\QualityRepositoryInterface;
 use App\Interfaces\SettingRepositoryInterface;
 use App\Interfaces\Api\AuthRepositoryInterface;
 use App\Interfaces\CategoryRepositoryInterface;
 use App\Interfaces\Api\FeedsRepositoryInterface;
+use App\Repositories\Api\OrderProcessRepository;
 use App\Interfaces\Api\WishlistRepositoryInterface;
+use App\Interfaces\ShippingCityRepositoryInterface;
+use App\Interfaces\PaymentMethodRepositoryInterface;
+use App\Interfaces\Api\OrderProcessRepositoryInterface;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -35,11 +43,15 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(ProductRepositoryInterface::class, ProductRepository::class);
         $this->app->bind(SizeRepositoryInterface::class, SizeRepository::class);
         $this->app->bind(QualityRepositoryInterface::class, QualityRepository::class);
+        $this->app->bind(OrderRepositoryInterface::class, OrderRepository::class);
+        $this->app->bind(ShippingCityRepositoryInterface::class, ShippingCityRepository::class);
+        $this->app->bind(PaymentMethodRepositoryInterface::class, PaymentMethodRepository::class);
 
         //api
         $this->app->bind(AuthRepositoryInterface::class, AuthRepository::class);
         $this->app->bind(FeedsRepositoryInterface::class, FeedsRepository::class);
         $this->app->bind(WishlistRepositoryInterface::class, WishlistRepository::class);
+        $this->app->bind(OrderProcessRepositoryInterface::class, OrderProcessRepository::class);
 
     }
 

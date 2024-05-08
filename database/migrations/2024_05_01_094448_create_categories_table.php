@@ -15,6 +15,7 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->string('name');
             $table->integer('waiting_days')->default(0);
+            $table->integer('limitation')->default(0);
             $table->tinyInteger('is_active')->default(1);
             $table->timestamps();
         });

@@ -8,14 +8,16 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use App\Http\Requests\UpdateUserRequest;
 use App\Interfaces\UserRepositoryInterface;
+use App\Interfaces\ShippingCityRepositoryInterface;
 
 class UserController extends Controller
 {
     private UserRepositoryInterface $userRepository;
 
-    public function __construct(UserRepositoryInterface $userRepository)
+    public function __construct(UserRepositoryInterface $userRepository,ShippingCityRepositoryInterface $shippingCityRepository)
     {
         $this->userRepository = $userRepository;
+        $this->shippingCityRepository = $shippingCityRepository;
     }
     /**
      * Display a listing of the resource.
@@ -62,8 +64,11 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
+        $shipping_cities = $this->shippingCityRepository->index();
+
         return Inertia::render('User/Edit',[
-            "user" => $user
+            "user" => $user,
+            "shipping_cities" => $shipping_cities['data']
         ]);
     }
 

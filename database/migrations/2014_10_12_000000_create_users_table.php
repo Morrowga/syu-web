@@ -16,7 +16,6 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique()->nullable();
             $table->string('msisdn')->unique();
-            $table->string('city')->nullable();
             $table->longText('shipping_address')->nullable();
             $table->enum('gender', ['male', 'female', 'other', 'empty'])->default('empty');
             $table->timestamp('email_verified_at')->nullable();

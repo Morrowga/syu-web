@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\Wishlist;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\WishlistCreateRequest;
@@ -16,8 +17,18 @@ class WishlistController extends Controller
         $this->wishlistRepository = $wishlistRepository;
     }
 
-    public function createWishlist(WishlistCreateRequest $request)
+    public function index(Request $request)
     {
-        return $this->wishlistRepository->createWishlist($request);
+        return $this->wishlistRepository->index($request);
+    }
+
+    public function store(WishlistCreateRequest $request)
+    {
+        return $this->wishlistRepository->store($request);
+    }
+
+    public function destroy(Wishlist $wishlist)
+    {
+        return $this->wishlistRepository->destroy($wishlist);
     }
 }

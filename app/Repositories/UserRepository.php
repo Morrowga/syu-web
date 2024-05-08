@@ -17,7 +17,7 @@ class UserRepository implements UserRepositoryInterface
 
         try {
 
-            $users = User::orderBy('created_at', 'DESC')->get();
+            $users = User::with('shippingcity')->orderBy('created_at', 'DESC')->get();
 
             return $this->success('Fetched Users', $users);
 

@@ -22,7 +22,6 @@ class DatabaseSeeder extends Seeder
             "name" => "admin",
             "email" => "admin@mail.com",
             "msisdn" => "09795864194",
-            "city" => "Yangon",
             "shipping_address" => "No.28, Mya Street",
             "gender" => 'male',
             "password" => Hash::make('password')

@@ -68,6 +68,9 @@ const props = defineProps({
         <div v-if="dataProps.column.field == 'is_default'">
             <SetDefault :defaultId="dataProps.row.id" :defaultUrl="props.action_url + '/default'" :default="dataProps.row.is_default" />
         </div>
+        <div v-if="dataProps.column.field == 'shipping_city_id'">
+            <span>{{ dataProps.row.shippingcity?.name  }}</span>
+        </div>
     </template>
     </vue-good-table>
 </template>

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('app_bg_color')->default('#000');
             $table->string('app_text_color')->default('#fff');
             $table->string('app_button_color')->default('#000');
+            $table->integer('expire_day')->default(0);
             $table->timestamps();
         });
     }

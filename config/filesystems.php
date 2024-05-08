@@ -76,6 +76,16 @@ return [
             'root' => storage_path('app/public/banners'),
             'url' => env('APP_URL').'/storage/banners',
         ],
+        'payment' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/payments'),
+            'url' => env('APP_URL').'/storage/payments',
+        ],
+        'payment_methods' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/payment_methods'),
+            'url' => env('APP_URL').'/storage/payment_methods',
+        ],
     ],
 
     /*

@@ -21,6 +21,8 @@ use App\Http\Controllers\ProductHomeController;
 use App\Http\Controllers\QualityHomeController;
 use App\Http\Controllers\StickerSizeController;
 use App\Http\Controllers\BadgeQualityController;
+use App\Http\Controllers\ShippingCityController;
+use App\Http\Controllers\PaymentMethodController;
 use App\Http\Controllers\PosterQualityController;
 use App\Http\Controllers\StickerQualityController;
 
@@ -78,7 +80,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/sizes/status/{size}', [SizeController::class, 'setStatus'])->name('sizes.status');
     Route::post('/sizes/default/{size}', [SizeController::class, 'setDefault'])->name('sizes.default');
 
-
     //qualities
     Route::get('/quality-home', [QualityHomeController::class, 'index'])->name('quality-home');
 
@@ -87,12 +88,22 @@ Route::middleware('auth')->group(function () {
     Route::post('/qualities/default/{quality}', [QualityController::class, 'setDefault'])->name('qualities.default');
 
     //order
-    Route::get('/orders', [OrderController::class, 'index'])->name('orders');
+    Route::resource('/orders', OrderController::class)->only([
+        'index', 'update', 'edit'
+    ]);
 
     //profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    //city
+    Route::resource('/shipping-cities', ShippingCityController::class);
+    Route::post('/shipping-cities/status/{shipping_city}', [ShippingCityController::class, 'setStatus'])->name('shipping-cities.status');
+
+    //payment methods
+    Route::resource('/payment-methods', PaymentMethodController::class);
+    Route::post('/payment-methods/status/{payment_method}', [PaymentMethodController::class, 'setStatus'])->name('payment-methods.status');
 });
 
 require __DIR__.'/auth.php';

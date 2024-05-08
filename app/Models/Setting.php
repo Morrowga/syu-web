@@ -13,7 +13,7 @@ class Setting extends Model implements HasMedia
 
     protected $table = 'settings';
 
-    protected $fillable = ['splash_slogan', 'app_bg_color', 'app_text_color', 'app_button_color'];
+    protected $fillable = ['splash_slogan', 'app_bg_color', 'app_text_color', 'app_button_color', 'expire_day'];
 
     protected $appends = ['images'];
 

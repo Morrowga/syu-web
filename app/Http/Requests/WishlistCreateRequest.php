@@ -2,6 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Wishlist;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Http\FormRequest;
 
 class WishlistCreateRequest extends FormRequest
@@ -21,8 +24,24 @@ class WishlistCreateRequest extends FormRequest
      */
     public function rules(): array
     {
+        $user = Auth::user();
+
         return [
-            "products" => ['required']
+            "product_id" => [
+                'required',
+                'exists:products,id',
+                Rule::unique('wishlists')->where(function ($query) use ($user) {
+                return $query->where('user_id', $user->id)
+                             ->where('product_id', request()->product_id);
+            })]
+        ];
+    }
+
+
+    public function messages()
+    {
+        return [
+            'product_id.unique' => 'The selected product is already in your wishlist.'
         ];
     }
 }

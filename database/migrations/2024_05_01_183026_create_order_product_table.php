@@ -21,6 +21,14 @@ return new class extends Migration
             $table->foreign('product_id')
             ->references('id')
             ->on('products')->onDelete('cascade');
+            $table->string('size_id');
+            $table->foreign('size_id')
+            ->references('id')
+            ->on('sizes')->onDelete('cascade');
+            $table->string('quality_id');
+            $table->foreign('quality_id')
+            ->references('id')
+            ->on('qualities')->onDelete('cascade');
         });
     }
 

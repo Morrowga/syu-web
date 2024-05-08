@@ -26,6 +26,7 @@ class FeedsRepository implements FeedsRepositoryInterface
 
             $products = Product::where('category_id', $productCategoryId)
                                 ->where('name', 'like', "%$q%")
+                                ->where('is_active', 1)
                                 ->paginate(20);
 
             $productsArray = [
@@ -42,7 +43,7 @@ class FeedsRepository implements FeedsRepositoryInterface
 
         } catch (\Exception $e) {
 
-            return $this->error($e->getMessage());
+            return $this->error($e->getMessage(),500);
 
         }
     }
@@ -51,7 +52,7 @@ class FeedsRepository implements FeedsRepositoryInterface
     {
         try {
 
-            $categories = Category::with(['sizes', 'qualities'])->paginate(10);
+            $categories = Category::where('is_active', 1)->with(['sizes', 'qualities'])->paginate(10);
 
             $categoriesArray = [
                 'data' => CategoryResource::collection($categories),
@@ -67,7 +68,7 @@ class FeedsRepository implements FeedsRepositoryInterface
 
         } catch (\Exception $e) {
 
-            return $this->error($e->getMessage());
+            return $this->error($e->getMessage(),500);
 
         }
     }

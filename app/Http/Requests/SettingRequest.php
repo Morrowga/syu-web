@@ -24,12 +24,12 @@ class SettingRequest extends FormRequest
         if(request()->setting_type == 'general')
         {
             return [
-                "waiting_days" => ['required'],
                 "splash_slogan" => ['required'],
                 "app_bg_color" => ['required'],
                 "app_text_color" => ['required'],
                 "app_button_color" => ['required'],
                 "categories" => ['required'],
+                "expire_day" => ['required']
             ];
         } else if(request()->setting_type == 'banner')
         {

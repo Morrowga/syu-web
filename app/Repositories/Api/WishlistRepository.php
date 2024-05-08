@@ -3,6 +3,8 @@
 namespace App\Repositories\Api;
 
 use App\Models\User;
+use App\Models\Product;
+use App\Models\Wishlist;
 use App\Traits\ApiResponses;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -14,31 +16,92 @@ class WishlistRepository implements WishlistRepositoryInterface
 {
     use ApiResponses;
 
-    public function createWishlist(Request $request)
+    public function index(Request $request)
     {
+        try {
+
+            $q = $request->query('q');
+
+            $wishlistCategoryId = $request->query('category');
+
+            $user = Auth::user();
+
+            $loadWishlists = $user->load('wishlists');
+
+            $wishlistIds = $loadWishlists->wishlists->pluck('id');
+
+            $wishlists = Product::whereIn('id', $wishlistIds)
+                                ->where('category_id', $wishlistCategoryId)
+                                ->where('is_active', 1)
+                                ->where('name', 'like', "%$q%")
+                                ->paginate(10);
+
+            $wishlistsArray = [
+                'data' => WishlistResource::collection($wishlists),
+                'total' => $wishlists->total(),
+                'per_page' => $wishlists->perPage(),
+                'current_page' => $wishlists->currentPage(),
+                'last_page' => $wishlists->lastPage(),
+                'from' => $wishlists->firstItem(),
+                'to' => $wishlists->lastItem(),
+            ];
+
+
+            return $this->success('Wishlist fetched successfully.', $wishlistsArray);
+
+        } catch (\Exception $e) {
+
+            return $this->error($e->getMessage(),500);
+
+        }
+    }
+
+    public function store(Request $request)
+    {
+        DB::beginTransaction();
+
         try {
 
             $user = Auth::user();
 
-            // $productIdsArray = json_decode($request->products, true);
-            $productIdsArray = $request->products;
+            $productId = $request->product_id;
 
-            $wishlists = [];
+            $wishlist = Wishlist::create([
+                "user_id" => $user->id,
+                "product_id" => $productId
+            ]);
 
-            foreach($productIdsArray as $productId)
-            {
-                $syncData[] = ['user_id' => $user->id, 'product_id' => $productId];
-            }
+            DB::commit();
 
-            DB::table('wishlists')->insert($syncData);
-
-            $wishlistData = $user->load('wishlists');
-
-            return $this->success('Wishlist created successfully.', $wishlistData->wishlists);
+            return $this->success('Wishlist created successfully.');
 
         } catch (\Exception $e) {
 
-            return $this->error($e->getMessage());
+            DB::rollback();
+
+            return $this->error($e->getMessage(),500);
+
+        }
+    }
+
+    public function destroy(Wishlist $wishlist)
+    {
+        try {
+
+            if($wishlist)
+            {
+                $wishlist->delete();
+
+                $user = Auth::user();
+
+                $wishlistData = $user->load('wishlists');
+
+                return $this->success('Wishlist deleted successfully.');
+            }
+
+        } catch (\Exception $e) {
+
+            return $this->error($e->getMessage(),500);
 
         }
     }

@@ -55,10 +55,7 @@ onMounted(() => {
                                 <NavLink :href="route('product-home')" :active="route().current('product-home')">
                                     Products
                                 </NavLink>
-                                <!-- <NavLink :href="route('stickers.index')" :active="route().current('stickers.*')">
-                                    Stickers
-                                </NavLink>
-                                <NavLink :href="route('badges.index')" :active="route().current('badges.*')">
+                                <!-- <NavLink :href="route('badges.index')" :active="route().current('badges.*')">
                                     Pin Badges
                                 </NavLink>
                                 <NavLink :href="route('posters.index')" :active="route().current('posters.*')">
@@ -67,7 +64,7 @@ onMounted(() => {
                                 <NavLink :href="route('settings.index')" :active="route().current('settings.*')">
                                     Settings
                                 </NavLink>
-                                <NavLink :href="route('orders')" :active="route().current('orders')">
+                                <NavLink :href="route('orders.index')" :active="route().current('orders.*')">
                                     Orders
                                 </NavLink>
                                 <NavDropDown>
@@ -132,6 +129,8 @@ onMounted(() => {
                                             <DropdownLink :href="route('size-home')"> Sizes </DropdownLink>
                                             <DropdownLink :href="route('quality-home')"> Quality </DropdownLink>
                                             <DropdownLink :href="route('categories.index')"> Categories </DropdownLink>
+                                            <DropdownLink :href="route('shipping-cities.index')"> Shipping Cities </DropdownLink>
+                                            <DropdownLink :href="route('payment-methods.index')"> Payment Methods </DropdownLink>
                                         </template>
                                     </Dropdown>
                                 </NavDropDown>

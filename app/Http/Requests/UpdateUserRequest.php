@@ -25,9 +25,8 @@ class UpdateUserRequest extends FormRequest
             "name" => ['required'],
             "email" => ['nullable'],
             "msisdn" => ['required'],
-            "city" => ['nullable'],
+            "shipping_city_id" => ['nullable'],
             "shipping_address" => ['nullable'],
-            "gender" => ['required', 'in:male,female,other']
         ];
     }
 }

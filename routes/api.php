@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\FeedsController;
 use App\Http\Controllers\Api\WishlistController;
+use App\Http\Controllers\OrderProcessController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,8 +33,19 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/update-profile', [AuthController::class, 'updateProfile']);
     Route::post('/logout', [AuthController::class, 'logout']);
 
+    //shipping city
+    Route::get('/shipping-cities', [AuthController::class, 'getShippingCities']);
+
     //feeds
     Route::get('/feeds', [FeedsController::class, 'getProducts']);
     Route::get('/categories', [FeedsController::class, 'getCategories']);
-    Route::post('/wishlist', [WishlistController::class, 'createWishlist']);
+
+    //wishlists
+    Route::resource('/wishlists', WishlistController::class);
+
+    //order
+    Route::get('/orders', [OrderProcessController::class, 'index']);
+    Route::post('/orders', [OrderProcessController::class, 'store']);
+    Route::patch('/orders/payment/{order}', [OrderProcessController::class, 'paid']);
+    Route::get('/orders/payment-methods', [OrderProcessController::class, 'paymentMethods']);
 });
