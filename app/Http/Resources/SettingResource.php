@@ -19,6 +19,7 @@ class SettingResource extends JsonResource
             "splash_slogan" => $this->splash_slogan,
             "app_bg_color" => $this->app_bg_color,
             "app_text_color" => $this->app_text_color,
+            "app_button_color" => $this->app_button_color,
             "banners" => $this->images,
         ];
     }
