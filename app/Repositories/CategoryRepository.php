@@ -36,6 +36,10 @@ class CategoryRepository implements CategoryRepositoryInterface
         try {
             $category = Category::create($request->all());
 
+            if (request()->hasFile('image') && request()->file('image')->isValid()) {
+                $category->addMediaFromRequest('image')->toMediaCollection('images', 'category');
+            }
+
             DB::commit();
 
             return $this->success('Category has been created successfully.');
@@ -55,6 +59,14 @@ class CategoryRepository implements CategoryRepositoryInterface
             if($category)
             {
                 $category->update($request->all());
+
+
+                if (request()->hasFile('image') && request()->file('image')->isValid()) {
+
+                    $category->clearMediaCollection('images');
+
+                    $category->addMediaFromRequest('image')->toMediaCollection('images', 'category');
+                }
 
                 DB::commit();
 

@@ -17,11 +17,13 @@ class CategoryResource extends JsonResource
         return [
             "id" => $this->id,
             "name" => $this->name,
+            "image_url" => $this->image_url,
             "category_id" => $this->category_id,
             "waiting_days" => $this->waiting_days,
             "is_active" => $this->is_active,
             "sizes" => $this->sizes,
-            "qualities" => $this->qualities
+            "qualities" => $this->qualities,
+            "total_product_count" => $this->products->count()
         ];
     }
 }

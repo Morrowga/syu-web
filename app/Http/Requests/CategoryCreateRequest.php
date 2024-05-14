@@ -23,6 +23,7 @@ class CategoryCreateRequest extends FormRequest
     {
         return [
             "name" => ['required'],
+            // "image" => ['required', 'file']
         ];
     }
 }
