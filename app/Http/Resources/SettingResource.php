@@ -15,7 +15,6 @@ class SettingResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            "id" => $this->id,
             "splash_slogan" => $this->splash_slogan,
             "app_bg_color" => $this->app_bg_color,
             "app_text_color" => $this->app_text_color,
