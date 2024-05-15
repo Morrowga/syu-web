@@ -29,7 +29,8 @@ class SettingRequest extends FormRequest
                 "app_text_color" => ['required'],
                 "app_button_color" => ['required'],
                 "categories" => ['required'],
-                "expire_day" => ['required']
+                "expire_day" => ['required'],
+                "app_logo_img" => ['nullable']
             ];
         } else if(request()->setting_type == 'banner')
         {

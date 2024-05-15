@@ -75,10 +75,10 @@ return [
             'root' => storage_path('app/public/categories'),
             'url' => env('APP_URL').'/storage/categories',
         ],
-        'banner' => [
+        'setting' => [
             'driver' => 'local',
-            'root' => storage_path('app/public/banners'),
-            'url' => env('APP_URL').'/storage/banners',
+            'root' => storage_path('app/public/settings'),
+            'url' => env('APP_URL').'/storage/settings',
         ],
         'payment' => [
             'driver' => 'local',

@@ -56,6 +56,13 @@ class SettingRepository implements SettingRepositoryInterface
                         }
                     }
 
+                    if (request()->hasFile('app_logo_img') && request()->file('app_logo_img')->isValid()) {
+
+                        $setting->clearMediaCollection('logo');
+
+                        $setting->addMediaFromRequest('app_logo_img')->toMediaCollection('logo', 'setting');
+                    }
+
                 } else if($request->setting_type == 'banner')
                 {
                     $remove_images = json_decode($request->remove_images, true);
@@ -73,7 +80,7 @@ class SettingRepository implements SettingRepositoryInterface
 
                     if ($request->hasFile('images')) {
                         foreach ($request->file('images') as $file) {
-                            $setting->addMedia($file)->toMediaCollection('banners', 'banner');
+                            $setting->addMedia($file)->toMediaCollection('banners', 'setting');
                         }
                     }
 

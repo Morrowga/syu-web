@@ -8,12 +8,13 @@ import TextInput from '@/Components/TextInput.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import StatusBadge from '@/Components/StatusBadge.vue';
 import FormError from '@/Components/FormError.vue';
-import { ref, defineProps, onMounted,onBeforeMount } from 'vue';
+import { ref, defineProps } from 'vue';
 
 const props = defineProps(['setting', 'errors', 'categories'])
-const fileInput = ref(null)
+const fileInput = ref(null);
+const logoInput = ref(null);
 const selectedFiles = ref([]);
-const didChangeStatus = ref(false);
+const logImageUrl = ref(props.setting?.app_logo_img);
 const oldImages = ref(props.setting?.images);
 
 const bannerForm = useForm
@@ -31,6 +32,7 @@ const settingForm = useForm
      app_button_color: props.setting?.app_button_color,
      expire_day: props.setting?.expire_day,
      categories: [],
+     app_logo_img: null,
      setting_type: 'general'
 });
 
@@ -80,7 +82,7 @@ const generalSubmitEvent = () =>
 {
     settingForm.categories = JSON.stringify(props.categories);
     console.log(settingForm)
-    settingForm.patch(route('settings.update', props.setting?.id), {
+    settingForm.post(route('settings.update', props.setting?.id) + '?_method=PUT', {
         preserveScroll: true,
         onSuccess: () => {
             settingForm.categories = props.categories;
@@ -89,10 +91,25 @@ const generalSubmitEvent = () =>
         },
     })
 }
+
+const openLogoInput = () => {
+    logoInput.value.click();
+}
+
+
+const handleLogoUpload = (event) => {
+    const file = event.target.files[0];
+      if (file) {
+        logImageUrl.value = URL.createObjectURL(file);
+        settingForm.app_logo_img = file
+      }
+}
+
 </script>
 
 <template>
     <Head title="Setting" />
+
 
     <AuthenticatedLayout>
         <template #header>
@@ -111,120 +128,136 @@ const generalSubmitEvent = () =>
                                 <FontAwesomeIcon class="text-gray-500 text-lg mr-2" icon="gear" />
                                 General
                             </h2>
-                            <VRow class="p-4">
-                                <VCol cols="4" v-for="category in props.categories" :key="category.id">
-                                    <div class="my-3">
-                                        <IphoneCheckbox v-model="category.is_active" :id="category.name" :title="category.name" />
-                                        <div class="my-5">
-                                            <InputLabel for="waiting_days" :value="category.name + ' Waiting Days'" :required="true" />
-                                            <TextInput
-                                                v-model="category.waiting_days"
-                                                placeholder="Enter waiting days"
-                                                id="waitingdays"
-                                                type="number"
-                                                oninput="this.value = Math.abs(this.value)"
-                                                class="mt-2 block w-full"
-                                            />
+                            <VRow>
+                                <VCol cols="7">
+                                    <VRow class="p-4">
+                                        <VCol cols="4" v-for="category in props.categories" :key="category.id">
+                                            <div class="my-3">
+                                                <IphoneCheckbox v-model="category.is_active" :id="category.name" :title="category.name" />
+                                                <div class="my-5">
+                                                    <InputLabel for="waiting_days" :value="category.name + ' Waiting Days'" :required="true" />
+                                                    <TextInput
+                                                        v-model="category.waiting_days"
+                                                        placeholder="Enter waiting days"
+                                                        id="waitingdays"
+                                                        type="number"
+                                                        oninput="this.value = Math.abs(this.value)"
+                                                        class="mt-2 block w-full"
+                                                    />
+                                                </div>
+                                                <div class="my-5">
+                                                    <InputLabel for="limitation" :value="category.name + ' Limitation'" :required="true" />
+                                                    <TextInput
+                                                        v-model="category.limitation"
+                                                        placeholder="Enter Limitation"
+                                                        id="limitation"
+                                                        type="number"
+                                                        oninput="this.value = Math.abs(this.value)"
+                                                        class="mt-2 block w-full"
+                                                    />
+                                                </div>
+                                            </div>
+                                        </VCol>
+                                        <!-- <VCol cols="4">
+                                            <div class="my-3">
+                                                <IphoneCheckbox v-model="settingForm.is_badge_active" id="badge" title="Badge"/>
+                                            </div>
+                                        </VCol>
+                                        <VCol cols="4">
+                                            <div class="my-3">
+                                                <IphoneCheckbox v-model="settingForm.is_poster_active" id="poster" title="Poster" />
+                                            </div>
+                                        </VCol> -->
+                                        <VCol cols="4">
+                                            <div class="my-2">
+                                                <InputLabel for="app_bg_color" value="App Background Color" :required="true" />
+                                                <TextInput
+                                                    v-model="settingForm.app_bg_color"
+                                                    placeholder="Enter app bg color"
+                                                    id="appbgcolor"
+                                                    type="text"
+                                                    class="mt-2 block w-full"
+                                                />
+                                                <FormError v-if="errors.app_bg_color" :message="errors.app_bg_color" />
+                                            </div>
+                                        </VCol>
+                                        <VCol cols="4">
+                                            <div class="my-2">
+                                                <InputLabel for="app_text_color" value="App Text Color" :required="true" />
+                                                <TextInput
+                                                    v-model="settingForm.app_text_color"
+                                                    placeholder="Enter app text color"
+                                                    id="apptextcolor"
+                                                    type="text"
+                                                    class="mt-2 block w-full"
+                                                />
+                                                <FormError v-if="errors.app_text_color" :message="errors.app_text_color" />
+                                            </div>
+                                        </VCol>
+                                        <VCol cols="4">
+                                            <div class="my-2">
+                                                <InputLabel for="app_button_color" value="App Button Color" :required="true" />
+                                                <TextInput
+                                                    v-model="settingForm.app_button_color"
+                                                    placeholder="Enter app button color"
+                                                    id="appbuttoncolor"
+                                                    type="text"
+                                                    class="mt-2 block w-full"
+                                                />
+                                                <FormError v-if="errors.app_button_color" :message="errors.app_button_color" />
+                                            </div>
+                                        </VCol>
+                                        <!-- <VCol cols="4">
+                                            <div class="my-2">
+                                                <InputLabel for="waiting_days" value="Waiting Days" :required="true" />
+                                                <TextInput
+                                                    v-model="settingForm.waiting_days"
+                                                    placeholder="Enter waiting days"
+                                                    id="waitingdays"
+                                                    type="number"
+                                                    class="mt-2 block w-full"
+                                                />
+                                                <FormError v-if="errors.waiting_days" :message="errors.waiting_days" />
+                                            </div>
+                                        </VCol> -->
+                                        <VCol cols="4">
+                                            <div class="my-2">
+                                                <InputLabel for="splash_slogan" value="Splash Slogan" :required="true" />
+                                                <TextInput
+                                                    v-model="settingForm.splash_slogan"
+                                                    placeholder="Enter splash slogan"
+                                                    id="splashslogan"
+                                                    type="text"
+                                                    class="mt-2 block w-full"
+                                                />
+                                                <FormError v-if="errors.splash_slogan" :message="errors.splash_slogan" />
+                                            </div>
+                                        </VCol>
+                                        <VCol cols="4">
+                                            <div class="my-2">
+                                                <InputLabel for="expire_day" value="Order Expire Day" :required="true" />
+                                                <TextInput
+                                                    v-model="settingForm.expire_day"
+                                                    placeholder="Enter expire day"
+                                                    id="expire_day"
+                                                    type="text"
+                                                    class="mt-2 block w-full"
+                                                />
+                                                <FormError v-if="errors.expire_day" :message="errors.expire_day" />
+                                            </div>
+                                        </VCol>
+                                    </VRow>
+                                </VCol>
+                                <VCol cols="5">
+                                    <div class="my-2">
+                                        <div  @click="openLogoInput"  class="h-[50vh] flex justify-center  items-center bg-white rounded-lg shadow-md p-6 border-dashed border-2 border-gray-300 hover:border-gray-400 cursor-pointer">
+                                            <VImg :src="logImageUrl" v-if="logImageUrl != null" cover></VImg>
+                                            <div v-else>
+                                                <p class="text-sm text-gray-500">Click to browse.</p>
+                                            </div>
                                         </div>
-                                        <div class="my-5">
-                                            <InputLabel for="limitation" :value="category.name + ' Limitation'" :required="true" />
-                                            <TextInput
-                                                v-model="category.limitation"
-                                                placeholder="Enter Limitation"
-                                                id="limitation"
-                                                type="number"
-                                                oninput="this.value = Math.abs(this.value)"
-                                                class="mt-2 block w-full"
-                                            />
-                                        </div>
-                                    </div>
-                                </VCol>
-                                <!-- <VCol cols="4">
-                                    <div class="my-3">
-                                        <IphoneCheckbox v-model="settingForm.is_badge_active" id="badge" title="Badge"/>
-                                    </div>
-                                </VCol>
-                                <VCol cols="4">
-                                    <div class="my-3">
-                                        <IphoneCheckbox v-model="settingForm.is_poster_active" id="poster" title="Poster" />
-                                    </div>
-                                </VCol> -->
-                                <VCol cols="4">
-                                    <div class="my-2">
-                                        <InputLabel for="app_bg_color" value="App Background Color" :required="true" />
-                                        <TextInput
-                                            v-model="settingForm.app_bg_color"
-                                            placeholder="Enter app bg color"
-                                            id="appbgcolor"
-                                            type="text"
-                                            class="mt-2 block w-full"
-                                        />
-                                        <FormError v-if="errors.app_bg_color" :message="errors.app_bg_color" />
-                                    </div>
-                                </VCol>
-                                <VCol cols="4">
-                                    <div class="my-2">
-                                        <InputLabel for="app_text_color" value="App Text Color" :required="true" />
-                                        <TextInput
-                                            v-model="settingForm.app_text_color"
-                                            placeholder="Enter app text color"
-                                            id="apptextcolor"
-                                            type="text"
-                                            class="mt-2 block w-full"
-                                        />
-                                        <FormError v-if="errors.app_text_color" :message="errors.app_text_color" />
-                                    </div>
-                                </VCol>
-                                <VCol cols="4">
-                                    <div class="my-2">
-                                        <InputLabel for="app_button_color" value="App Button Color" :required="true" />
-                                        <TextInput
-                                            v-model="settingForm.app_button_color"
-                                            placeholder="Enter app button color"
-                                            id="appbuttoncolor"
-                                            type="text"
-                                            class="mt-2 block w-full"
-                                        />
-                                        <FormError v-if="errors.app_button_color" :message="errors.app_button_color" />
-                                    </div>
-                                </VCol>
-                                <!-- <VCol cols="4">
-                                    <div class="my-2">
-                                        <InputLabel for="waiting_days" value="Waiting Days" :required="true" />
-                                        <TextInput
-                                            v-model="settingForm.waiting_days"
-                                            placeholder="Enter waiting days"
-                                            id="waitingdays"
-                                            type="number"
-                                            class="mt-2 block w-full"
-                                        />
-                                        <FormError v-if="errors.waiting_days" :message="errors.waiting_days" />
-                                    </div>
-                                </VCol> -->
-                                <VCol cols="4">
-                                    <div class="my-2">
-                                        <InputLabel for="splash_slogan" value="Splash Slogan" :required="true" />
-                                        <TextInput
-                                            v-model="settingForm.splash_slogan"
-                                            placeholder="Enter splash slogan"
-                                            id="splashslogan"
-                                            type="text"
-                                            class="mt-2 block w-full"
-                                        />
-                                        <FormError v-if="errors.splash_slogan" :message="errors.splash_slogan" />
-                                    </div>
-                                </VCol>
-                                <VCol cols="4">
-                                    <div class="my-2">
-                                        <InputLabel for="expire_day" value="Order Expire Day" :required="true" />
-                                        <TextInput
-                                            v-model="settingForm.expire_day"
-                                            placeholder="Enter expire day"
-                                            id="expire_day"
-                                            type="text"
-                                            class="mt-2 block w-full"
-                                        />
-                                        <FormError v-if="errors.expire_day" :message="errors.expire_day" />
+                                        <FormError v-if="errors.logo_img" :message="errors.logo_img" />
+                                        <input type="file" ref="logoInput" id="logoInput" class="hidden" @change="handleLogoUpload">
                                     </div>
                                 </VCol>
                             </VRow>

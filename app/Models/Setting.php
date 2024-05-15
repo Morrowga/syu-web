@@ -15,7 +15,7 @@ class Setting extends Model implements HasMedia
 
     protected $fillable = ['splash_slogan', 'app_bg_color', 'app_text_color', 'app_button_color', 'expire_day'];
 
-    protected $appends = ['images'];
+    protected $appends = ['images', 'app_logo_img'];
 
     public function getImagesAttribute()
     {
@@ -29,5 +29,15 @@ class Setting extends Model implements HasMedia
         })->toArray();
 
         return $imageUrls;
+    }
+
+
+    public function getAppLogoImgAttribute()
+    {
+        if ($this->getFirstMedia('logo')) {
+            return $this->getFirstMedia('logo')->getUrl();
+        }
+
+        return null;
     }
 }

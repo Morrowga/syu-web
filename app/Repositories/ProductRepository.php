@@ -40,7 +40,7 @@ class ProductRepository implements ProductRepositoryInterface
             $product->load('category');
 
             if (request()->hasFile('image') && request()->file('image')->isValid()) {
-                $product->addMediaFromRequest('image')->toMediaCollection('images', $product->category->name);
+                $product->addMediaFromRequest('image')->toMediaCollection('images', strtolower($product->category->name));
             }
 
             DB::commit();
