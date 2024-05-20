@@ -30,11 +30,20 @@ class WishlistRepository implements WishlistRepositoryInterface
 
             $wishlistIds = $loadWishlists->wishlists->pluck('id');
 
-            $wishlists = Product::whereIn('id', $wishlistIds)
-                                ->where('category_id', $wishlistCategoryId)
-                                ->where('is_active', 1)
-                                ->where('name', 'like', "%$q%")
-                                ->paginate(10);
+            if($wishlistCategoryId != null)
+            {
+                $wishlists = Product::whereIn('id', $wishlistIds)
+                ->where('category_id', $wishlistCategoryId)
+                ->where('is_active', 1)
+                ->where('name', 'like', "%$q%")
+                ->paginate(10);
+            } else {
+                $wishlists = Product::whereIn('id', $wishlistIds)
+                ->where('is_active', 1)
+                ->where('name', 'like', "%$q%")
+                ->paginate(10);
+            }
+
 
             $wishlistsArray = [
                 'data' => WishlistResource::collection($wishlists),

@@ -27,7 +27,7 @@ class FeedsRepository implements FeedsRepositoryInterface
             $products = Product::where('category_id', $productCategoryId)
                                 ->where('name', 'like', "%$q%")
                                 ->where('is_active', 1)
-                                ->paginate(20);
+                                ->paginate(10);
 
             $productsArray = [
                 'data' => ProductResource::collection($products),
@@ -48,23 +48,24 @@ class FeedsRepository implements FeedsRepositoryInterface
         }
     }
 
-    public function getCategories()
+    public function getCategories(Request $request)
     {
         try {
+        $per_page = $request->query('per_page') ?? 10;
 
-            $categories = Category::where('is_active', 1)->with(['sizes', 'qualities'])->paginate(10);
+        $categories = Category::where('is_active', 1)->with(['sizes', 'qualities'])->paginate($per_page);
 
-            $categoriesArray = [
-                'data' => CategoryResource::collection($categories),
-                'total' => $categories->total(),
-                'per_page' => $categories->perPage(),
-                'current_page' => $categories->currentPage(),
-                'last_page' => $categories->lastPage(),
-                'from' => $categories->firstItem(),
-                'to' => $categories->lastItem(),
-            ];
+        $categoriesArray = [
+            'data' => CategoryResource::collection($categories),
+            'total' => $categories->total(),
+            'per_page' => $categories->perPage(),
+            'current_page' => $categories->currentPage(),
+            'last_page' => $categories->lastPage(),
+            'from' => $categories->firstItem(),
+            'to' => $categories->lastItem(),
+        ];
 
-            return $this->success('Categories fetched successfully.', $categories);
+            return $this->success('Categories fetched successfully.', $categoriesArray);
 
         } catch (\Exception $e) {
 

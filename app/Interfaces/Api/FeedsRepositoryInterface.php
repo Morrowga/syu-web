@@ -8,5 +8,5 @@ interface FeedsRepositoryInterface
 {
     public function getProducts(Request $request);
 
-    public function getCategories();
+    public function getCategories(Request $request);
 }

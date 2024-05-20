@@ -20,8 +20,8 @@ class FeedsController extends Controller
         return $this->feedsRepository->getProducts($request);
     }
 
-    public function getCategories()
+    public function getCategories(Request $request)
     {
-        return $this->feedsRepository->getCategories();
+        return $this->feedsRepository->getCategories($request);
     }
 }
