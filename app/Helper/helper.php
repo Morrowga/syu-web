@@ -13,3 +13,9 @@ if (! function_exists('generateRandomString')) {
         return $randomString;
     }
 }
+
+if (! function_exists('calculate_product_price')) {
+    function calculate_product_price(int $size,int $quality) {
+        return $size + $quality;
+    }
+}

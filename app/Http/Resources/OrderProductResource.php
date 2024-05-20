@@ -25,6 +25,7 @@ class OrderProductResource extends JsonResource
             "image_url" => $this->image_url,
             "size" => new SizeResource($this->pivot->size),
             "quality" => new QualityResource($this->pivot->quality),
+            "total_amt" => calculate_product_price($this->pivot->size->price, $this->pivot->quality->price)
         ];
     }
 }

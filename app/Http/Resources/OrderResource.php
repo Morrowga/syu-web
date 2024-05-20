@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
+use App\Http\Resources\UserResource;
 use App\Http\Resources\OrderProductResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -19,6 +20,7 @@ class OrderResource extends JsonResource
             "id" => $this->id,
             "order_no" => $this->order_no,
             "user_id" => $this->user_id,
+            "user" => new UserResource($this->user->load('shippingcity')),
             "waiting_start_date" => $this->waiting_start_date,
             "waiting_end_date" => $this->waiting_end_date,
             "total_price" => $this->total_price,

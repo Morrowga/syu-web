@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\User;
 use App\Traits\UUID;
 use App\Models\Product;
 use App\Models\OrderProduct;
@@ -46,6 +47,11 @@ class Order extends Model implements HasMedia
         }
 
         return null;
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 
     public function products()

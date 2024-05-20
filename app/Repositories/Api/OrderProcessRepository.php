@@ -49,6 +49,16 @@ class OrderProcessRepository implements OrderProcessRepositoryInterface
         }
     }
 
+    public function show(Order $order)
+    {
+        if(!empty($order))
+        {
+            return $this->success('Order fetched successfully.', new OrderResource($order));
+        }
+
+        return $this->error('Order Not Found.',500);
+    }
+
     public function store(Request $request)
     {
         DB::beginTransaction();

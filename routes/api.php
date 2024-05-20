@@ -46,6 +46,7 @@ Route::middleware('auth:sanctum')->group(function () {
     //order
     Route::get('/orders', [OrderProcessController::class, 'index']);
     Route::post('/orders', [OrderProcessController::class, 'store']);
+    Route::get('/orders/detail/{order}', [OrderProcessController::class, 'show']);
     Route::patch('/orders/payment/{order}', [OrderProcessController::class, 'paid']);
     Route::get('/orders/payment-methods', [OrderProcessController::class, 'paymentMethods']);
 });
