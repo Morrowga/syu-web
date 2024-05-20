@@ -27,7 +27,8 @@ class OrderProcessRepository implements OrderProcessRepositoryInterface
 
             $user = Auth::user();
 
-            $orders = Order::where('user_id', $user->id)->orderBy('created_at', 'DESC')->paginate(10);
+
+            $orders = Order::where('user_id', $user->id)->orderBy('created_at', 'DESC')->with('products')->paginate(10);
 
             $ordersArray = [
                 'data' => OrderResource::collection($orders),

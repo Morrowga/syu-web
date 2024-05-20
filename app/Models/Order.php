@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Traits\UUID;
 use App\Models\Product;
+use App\Models\OrderProduct;
 use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\InteractsWithMedia;
@@ -51,7 +52,7 @@ class Order extends Model implements HasMedia
     {
         return $this->belongsToMany(Product::class, 'order_product')
         ->withPivot('size_id', 'quality_id')
-        ->with(['size', 'quality']);
+        ->using(OrderProduct::class);
     }
 
 }

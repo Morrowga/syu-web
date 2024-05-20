@@ -2,8 +2,11 @@
 
 namespace App\Models;
 
+use App\Models\Size;
 use App\Traits\UUID;
+use App\Models\Quality;
 use App\Models\Category;
+use App\Models\OrderProduct;
 use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\InteractsWithMedia;
