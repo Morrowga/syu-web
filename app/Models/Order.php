@@ -25,7 +25,6 @@ class Order extends Model implements HasMedia
         'waiting_end_date',
         'total_price',
         'note',
-        'is_paid',
         'overall_price',
         'payment_method',
         'order_expired_date',
@@ -34,7 +33,6 @@ class Order extends Model implements HasMedia
     ];
 
     protected $casts = [
-        'is_paid' => 'boolean',
         'paid_delivery_cost' => 'boolean'
     ];
 

@@ -32,6 +32,8 @@ class OrderController extends Controller
     {
         $products = $this->orderRepository->orderProducts($order);
 
+        // return $products['data'];
+
         return Inertia::render('Order/Edit',[
             "order_detail" => new OrderResource($order),
             "data" => $products['data']
@@ -46,4 +48,12 @@ class OrderController extends Controller
 
         return redirect()->route('orders.index');
     }
+
+    public function destroy(Order $order)
+    {
+        $deleteOrder = $this->orderRepository->delete($order);
+
+        return redirect()->route('orders.index');
+    }
+
 }

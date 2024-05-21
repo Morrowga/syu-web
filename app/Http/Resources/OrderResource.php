@@ -28,7 +28,6 @@ class OrderResource extends JsonResource
             "note" => $this->note,
             "order_expired_date" => $this->order_expired_date,
             "paid_delivery_cost" => $this->paid_delivery_cost,
-            "is_paid" => $this->is_paid,
             "payment_method" => $this->payment_method,
             "order_status" => $this->order_status,
             "created_at" => $this->created_at,

@@ -109,7 +109,7 @@ class OrderProcessRepository implements OrderProcessRepositoryInterface
         DB::beginTransaction();
 
         try {
-            if($order->is_paid == 0)
+            if($order->order_status == 'pending')
             {
                 if (request()->hasFile('image') && request()->file('image')->isValid()) {
 
@@ -122,7 +122,7 @@ class OrderProcessRepository implements OrderProcessRepositoryInterface
                             "overall_price" => $request->paid_delivery_cost == true ? $order->total_price + $user->shippingcity->cost : $order->total_price,
                             "payment_method" => $request->payment_method,
                             "paid_delivery_cost" => $request->paid_delivery_cost == true ? 1 : 0,
-                            "is_paid" => 1,
+                            "order_status" => 'confirmed'
                         ]);
 
                         DB::commit();
@@ -134,9 +134,16 @@ class OrderProcessRepository implements OrderProcessRepositoryInterface
                 }
 
                 return $this->error('Payment Screenshot is invalid.', 400);
-            }
 
-            return $this->error('Order is already paid.', 400);
+            } else if($order->order_status == 'confirmed') {
+
+                return $this->error('Order is already paid.', 400);
+
+            } else {
+
+                return $this->error('Order cannot paid.', 400);
+
+            }
 
         } catch (\Exception $e) {
 

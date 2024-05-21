@@ -22,7 +22,7 @@ class OrderUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "order_status" => ['required', 'in:pending, confirmed, expired, cancel, delivered'],
+            "order_status" => ['required'],
         ];
     }
 }

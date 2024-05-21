@@ -25,7 +25,6 @@ return new class extends Migration
             $table->text('note')->nullable();
             $table->dateTime('order_expired_date');
             $table->tinyInteger('paid_delivery_cost')->default(0);
-            $table->tinyInteger('is_paid')->default(0);
             $table->string('payment_method')->nullable();
             $table->enum('order_status', ['pending', 'confirmed', 'expired', 'cancel', 'delivered'])->default('pending');
             $table->timestamps();

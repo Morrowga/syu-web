@@ -7,6 +7,7 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Traits\CRUDResponses;
 use Illuminate\Support\Facades\DB;
+use App\Http\Resources\OrderProductResource;
 use App\Interfaces\OrderRepositoryInterface;
 
 class OrderRepository implements OrderRepositoryInterface
@@ -32,17 +33,15 @@ class OrderRepository implements OrderRepositoryInterface
     public function orderProducts(Order $order)
     {
         try {
-            $userProducts = $order->products->pluck('id')->toArray();
+            $userProducts = $order->products;
 
-            $orderProducts = Product::with('category')
-            ->whereIn('id', $userProducts)
-            ->get()
+            $orderProducts = $userProducts->load('category')
             ->groupBy('category_id')
             ->map(function ($products, $categoryId) {
                 $categoryName = $products->first()->category->name;
                 return [
                     'category' => $categoryName,
-                    'products' => $products
+                    'products' => OrderProductResource::collection($products)
                 ];
             })
             ->values()
@@ -82,4 +81,19 @@ class OrderRepository implements OrderRepositoryInterface
         }
     }
 
+    public function delete(Order $order)
+    {
+        try {
+            if($order)
+            {
+                $order->delete();
+            }
+
+            return $this->success('Order has been deleted');
+
+        } catch (\Exception $e) {
+
+            return $this->error($e->getMessage());
+        }
+    }
 }

@@ -88,7 +88,7 @@ Route::middleware('auth')->group(function () {
 
     //order
     Route::resource('/orders', OrderController::class)->only([
-        'index', 'update', 'edit'
+        'index', 'update', 'edit', 'destroy'
     ]);
 
     //profile

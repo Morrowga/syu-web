@@ -12,4 +12,6 @@ interface OrderRepositoryInterface
     public function orderProducts(Order $order);
 
     public function update(Request $request, Order $order);
+
+    public function delete(Order $order);
 }
