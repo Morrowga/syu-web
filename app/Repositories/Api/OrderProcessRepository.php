@@ -77,13 +77,12 @@ class OrderProcessRepository implements OrderProcessRepositoryInterface
                 "order_expired_date" => $currentDate->addDays($setting->expire_day),
                 "order_status" => 'pending',
                 "total_price" => $request->total_price,
-                "overall_price" => $request->overall_price,
+                "overall_price" => $request->total_price,
                 "user_id" => $user->id,
                 "note" => $request->note,
             ]);
 
             $products = json_decode($request->products, true);
-            // $products = $request->products;
 
             foreach($products as $product)
             {
@@ -94,7 +93,7 @@ class OrderProcessRepository implements OrderProcessRepositoryInterface
 
             DB::commit();
 
-            return $this->success('Order created successfully.');
+            return $this->success('Order created successfully.', new OrderResource($order));
 
         } catch (\Exception $e) {
 
@@ -116,7 +115,10 @@ class OrderProcessRepository implements OrderProcessRepositoryInterface
 
                     $order->addMediaFromRequest('image')->toMediaCollection('images', 'payment');
 
+                    $user = Auth::user();
+
                     $order->update([
+                        "overall_price" => $request->paid_delivery_cost == true ? $order->total_price + $user->shippingcity->cost : $order->total_price,
                         "payment_method" => $request->payment_method,
                         "paid_delivery_cost" => $request->paid_delivery_cost == true ? 1 : 0,
                         "is_paid" => 1,

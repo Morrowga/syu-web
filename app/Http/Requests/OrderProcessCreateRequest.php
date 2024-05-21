@@ -24,8 +24,7 @@ class OrderProcessCreateRequest extends FormRequest
     {
         return [
             "total_price" => ['required', 'integer'],
-            "overall_price" => ['required', 'integer'],
-            "note" => ['required'],
+            "note" => ['nullable'],
             "products" => ['required'],
             "waiting_days" => ['required', 'integer'],
         ];
