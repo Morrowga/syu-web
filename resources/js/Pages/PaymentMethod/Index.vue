@@ -20,7 +20,7 @@ const clientSidePaginationOptions = ref({
         position: 'bottom',
         perPageDropdown: [10, 20, 50,100,200],
         dropdownAllowAll: false,
-        setCurrentPage: 2,
+        setCurrentPage: 1,
         nextLabel: 'next',
         prevLabel: 'prev',
         rowsPerPageLabel: 'Rows per page',

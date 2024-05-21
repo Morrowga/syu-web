@@ -39,6 +39,23 @@ const props = defineProps({
     }
 })
 
+const getChipColor = (orderStatus) => {
+  switch (orderStatus) {
+    case 'pending':
+      return 'warning';
+    case 'confirmed':
+      return 'success';
+    case 'delivered':
+      return 'success';
+    case 'cancel':
+      return 'red';
+    case 'expired':
+      return 'red';
+    default:
+      return 'secondary';
+  }
+};
+
 </script>
 <template>
     <vue-good-table
@@ -70,6 +87,15 @@ const props = defineProps({
         </div>
         <div v-if="dataProps.column.field == 'shipping_city_id'">
             <span>{{ dataProps.row.shippingcity?.name  }}</span>
+        </div>
+        <div v-if="dataProps.column.field == 'paid_delivery_cost'">
+            <span>{{ dataProps.row.paid_delivery_cost ? 'Yes'  : 'No' }}</span>
+        </div>
+        <div v-if="dataProps.column.field == 'user'">
+            <span>{{ dataProps.row.user?.name }}</span>
+        </div>
+        <div v-if="dataProps.column.field == 'order_status'">
+            <VChip :color="getChipColor(dataProps.row.order_status)" class="text-capitalize" variant="flat">{{ dataProps.row.order_status }}</VChip>
         </div>
     </template>
     </vue-good-table>

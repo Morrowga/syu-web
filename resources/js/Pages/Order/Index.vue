@@ -14,19 +14,24 @@ const orderSearch = ref({
 })
 
 const clientSidePaginationOptions = ref({
-        enabled: true,
-        mode: 'records',
-        perPage: 10,
-        position: 'bottom',
-        perPageDropdown: [10, 20, 50,100,200],
-        dropdownAllowAll: false,
-        setCurrentPage: 2,
-        nextLabel: 'next',
-        prevLabel: 'prev',
-        rowsPerPageLabel: 'Rows per page',
-        ofLabel: 'of',
-        pageLabel: 'page',
-        allLabel: 'All',
+    enabled: true,
+    mode: 'records',
+    perPage: 10,
+    setCurrentPage: 1,
+    position: 'bottom',
+    perPageDropdown: [10, 50, 100, 500],
+    dropdownAllowAll: false,
+    jumpFirstOrLast : true,
+    firstLabel : 'First Page',
+    lastLabel : 'Last Page',
+    nextLabel: 'next',
+    prevLabel: 'prev',
+    rowsPerPageLabel: 'Rows per page',
+    ofLabel: 'of',
+    pageLabel: 'page',
+    allLabel: 'All',
+    infoFn: (params) => `page ${params.firstRecordOnPage}`,
+
 })
 
 const columns = ref([
@@ -36,7 +41,7 @@ const columns = ref([
     },
     {
         label: 'User',
-        field: 'user_id',
+        field: 'user',
     },
     {
         label: 'Paid Delivery',

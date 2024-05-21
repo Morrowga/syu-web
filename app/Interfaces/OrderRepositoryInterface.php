@@ -9,5 +9,7 @@ interface OrderRepositoryInterface
 {
     public function index();
 
+    public function orderProducts(Order $order);
+
     public function update(Request $request, Order $order);
 }

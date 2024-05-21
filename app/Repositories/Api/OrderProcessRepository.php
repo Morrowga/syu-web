@@ -117,16 +117,20 @@ class OrderProcessRepository implements OrderProcessRepositoryInterface
 
                     $user = Auth::user();
 
-                    $order->update([
-                        "overall_price" => $request->paid_delivery_cost == true ? $order->total_price + $user->shippingcity->cost : $order->total_price,
-                        "payment_method" => $request->payment_method,
-                        "paid_delivery_cost" => $request->paid_delivery_cost == true ? 1 : 0,
-                        "is_paid" => 1,
-                    ]);
+                    if ($user->shippingcity !== null) {
+                        $order->update([
+                            "overall_price" => $request->paid_delivery_cost == true ? $order->total_price + $user->shippingcity->cost : $order->total_price,
+                            "payment_method" => $request->payment_method,
+                            "paid_delivery_cost" => $request->paid_delivery_cost == true ? 1 : 0,
+                            "is_paid" => 1,
+                        ]);
 
-                    DB::commit();
+                        DB::commit();
 
-                    return $this->success('Payment created successfully.');
+                        return $this->success('Payment created successfully.');
+                    }
+
+                    return $this->error('Shipping Address does not exist in current user.');
                 }
 
                 return $this->error('Payment Screenshot is invalid.', 400);
