@@ -87,7 +87,7 @@ class OrderProcessRepository implements OrderProcessRepositoryInterface
             foreach($products as $product)
             {
                 $order->products()->attach([
-                    $product['product_id'] => ['size_id' => $product['size_id'], 'quality_id' => $product['quality_id']],
+                    $product['product_id'] => ['size_id' => $product['size_id'], 'quality_id' => $product['quality_id'], 'qty' => $product['qty']],
                 ]);
             }
 

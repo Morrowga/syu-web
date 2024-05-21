@@ -15,7 +15,13 @@ if (! function_exists('generateRandomString')) {
 }
 
 if (! function_exists('calculate_product_price')) {
-    function calculate_product_price(int $size,int $quality) {
+    function calculate_product_price(int $size,int $quality,int $qty) {
+        return ($size + $quality) * $qty;
+    }
+}
+
+if (! function_exists('calculate_price_per_product')) {
+    function calculate_price_per_product(int $size,int $quality) {
         return $size + $quality;
     }
 }
