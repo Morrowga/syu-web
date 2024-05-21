@@ -33,7 +33,7 @@ class OrderResource extends JsonResource
             "order_status" => $this->order_status,
             "created_at" => $this->created_at,
             "image_url" => $this->image_url,
-            "count" => $this->products->count(),
+            "total_qty" => $this->total_qty,
             "products" => OrderProductResource::collection($this->products),
         ];
     }

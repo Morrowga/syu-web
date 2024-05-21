@@ -38,7 +38,7 @@ class Order extends Model implements HasMedia
         'paid_delivery_cost' => 'boolean'
     ];
 
-    protected $appends = ['image_url'];
+    protected $appends = ['image_url', 'total_qty'];
 
     public function getImageUrlAttribute()
     {
@@ -61,4 +61,10 @@ class Order extends Model implements HasMedia
         ->using(OrderProduct::class);
     }
 
+    public function getTotalQtyAttribute()
+    {
+        return $this->products->sum(function ($product) {
+            return $product->pivot->qty;
+        });
+    }
 }
