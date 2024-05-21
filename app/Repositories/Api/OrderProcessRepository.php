@@ -130,7 +130,7 @@ class OrderProcessRepository implements OrderProcessRepositoryInterface
                         return $this->success('Payment created successfully.');
                     }
 
-                    return $this->error('Shipping Address does not exist in current user.');
+                    return $this->error('Shipping Address does not exist in current user.', 400);
                 }
 
                 return $this->error('Payment Screenshot is invalid.', 400);
