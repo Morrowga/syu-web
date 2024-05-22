@@ -93,15 +93,15 @@ class WishlistRepository implements WishlistRepositoryInterface
         }
     }
 
-    public function destroy(Product $product)
+    public function destroy(Product $wishlist)
     {
         try {
 
-            if($product)
+            if($wishlist)
             {
                 $user = Auth::user();
 
-                $wishlistData = $user->wishlists()->detach($product->id);
+                $wishlistData = $user->wishlists()->detach($wishlist->id);
 
                 return $this->success('Wishlist deleted successfully.');
             }

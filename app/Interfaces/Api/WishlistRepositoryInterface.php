@@ -12,5 +12,5 @@ interface WishlistRepositoryInterface
 
     public function store(Request $request);
 
-    public function destroy(Product $product);
+    public function destroy(Product $wishlist);
 }

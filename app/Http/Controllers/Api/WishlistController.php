@@ -28,8 +28,8 @@ class WishlistController extends Controller
         return $this->wishlistRepository->store($request);
     }
 
-    public function destroy(Product $product)
+    public function destroy(Product $wishlist)
     {
-        return $this->wishlistRepository->destroy($product);
+        return $this->wishlistRepository->destroy($wishlist);
     }
 }
