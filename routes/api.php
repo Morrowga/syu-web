@@ -30,7 +30,8 @@ Route::post('/verify-otp', [AuthController::class, 'verifyOtp']);
 
 Route::middleware('auth:sanctum')->group(function () {
     //auth
-    Route::put('/update-profile', [AuthController::class, 'updateProfile']);
+    Route::put('/users/update-profile', [AuthController::class, 'updateProfile']);
+    Route::get('/users/profile', [AuthController::class, 'getProfile']);
     Route::post('/logout', [AuthController::class, 'logout']);
 
     //shipping city

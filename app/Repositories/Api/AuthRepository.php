@@ -184,6 +184,22 @@ class AuthRepository implements AuthRepositoryInterface
         }
     }
 
+    public function getProfile()
+    {
+        try {
+
+            $user = Auth::user();
+
+            $user->load('shippingcity');
+
+            return $this->success('User Profile fetched successfully.', new UserResource($user));
+
+        } catch (\Exception $e) {
+
+            return $this->error($e->getMessage(), 500);
+        }
+    }
+
     public function generateOtp($msisdn, $length)
     {
         $otp = mt_rand(pow(10, $length - 1), pow(10, $length) - 1);

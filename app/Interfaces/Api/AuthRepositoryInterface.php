@@ -19,4 +19,6 @@ interface AuthRepositoryInterface
     public function updateProfile(Request $request);
 
     public function getShippingCities();
+
+    public function getProfile();
 }

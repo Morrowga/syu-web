@@ -54,4 +54,9 @@ class AuthController extends Controller
         return $this->authRepository->getShippingCities();
     }
 
+    public function getProfile()
+    {
+        return $this->authRepository->getProfile();
+    }
+
 }
