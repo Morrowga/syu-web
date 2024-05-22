@@ -11,6 +11,8 @@ interface OrderProcessRepositoryInterface
 
     public function show(Order $order);
 
+    public function showProductDetail(Request $request, Order $order);
+
     public function store(Request $request);
 
     public function paid(Request $request, Order $order);

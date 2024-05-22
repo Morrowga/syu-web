@@ -14,6 +14,7 @@ use App\Models\PaymentMethod;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\OrderResource;
+use App\Http\Resources\OrderProductResource;
 use App\Http\Resources\PaymentMethodResource;
 use App\Interfaces\Api\OrderProcessRepositoryInterface;
 
@@ -54,6 +55,18 @@ class OrderProcessRepository implements OrderProcessRepositoryInterface
         if(!empty($order))
         {
             return $this->success('Order fetched successfully.', new OrderResource($order));
+        }
+
+        return $this->error('Order Not Found.',500);
+    }
+
+    public function showProductDetail(Request $request, Order $order)
+    {
+        if(!empty($order))
+        {
+            $products = $order->products()->where('category_id', $request->query('category_id'))->get();
+
+            return $this->success('Order Products fetched successfully.', OrderProductResource::collection($products));
         }
 
         return $this->error('Order Not Found.',500);
