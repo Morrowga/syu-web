@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\Product;
 use App\Models\Wishlist;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -27,8 +28,8 @@ class WishlistController extends Controller
         return $this->wishlistRepository->store($request);
     }
 
-    public function destroy(Wishlist $wishlist)
+    public function destroy(Product $product)
     {
-        return $this->wishlistRepository->destroy($wishlist);
+        return $this->wishlistRepository->destroy($product);
     }
 }
