@@ -19,6 +19,7 @@ class CategoryResource extends JsonResource
             "name" => $this->name,
             "image_url" => $this->image_url,
             "category_id" => $this->category_id,
+            "limitation" => $this->limitation,
             "waiting_days" => $this->waiting_days,
             "is_active" => $this->is_active,
             "sizes" => $this->sizes,
