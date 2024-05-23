@@ -18,8 +18,8 @@ return new class extends Migration
             $table->foreign('user_id')
             ->references('id')
             ->on('users')->onDelete('cascade');
-            $table->date('waiting_start_date');
-            $table->date('waiting_end_date');
+            $table->dateTime('waiting_start_date');
+            $table->dateTime('waiting_end_date');
             $table->decimal('total_price', 10, 2)->default(0);
             $table->decimal('overall_price', 10, 2)->default(0);
             $table->text('note')->nullable();

@@ -99,8 +99,6 @@ class OrderProcessRepository implements OrderProcessRepositoryInterface
         try {
             $setting = Setting::first();
 
-            $currentDate = Carbon::now();
-
             $user = Auth::user();
 
             $products = json_decode($request->products, true);
@@ -114,8 +112,8 @@ class OrderProcessRepository implements OrderProcessRepositoryInterface
 
             $order = Order::create([
                 "order_no" => $this->generateOrderNumber(),
-                "waiting_start_date" => $currentDate->toDateString(),
-                "waiting_end_date" => $currentDate->addDays($waiting_days)->toDateString(),
+                "waiting_start_date" => Carbon::now(),
+                "waiting_end_date" => Carbon::now()->addDays($waiting_days),
                 "order_expired_date" => Carbon::now()->addDays($setting->expire_day),
                 "order_status" => 'pending',
                 "total_price" => $request->total_price,
