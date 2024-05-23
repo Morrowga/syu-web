@@ -4,6 +4,7 @@ namespace App\Http\Requests\Api;
 
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\Rules\NameValidation;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ProfileUpdateRequest extends FormRequest
@@ -26,9 +27,9 @@ class ProfileUpdateRequest extends FormRequest
         $user = Auth::user();
 
         return [
-            "name" => ['required'],
+            "name" => ['required', new NameValidation],
             "email" => ['nullable'],
-            "city" => ['required'],
+            "shipping_city_id" => ['required'],
             "shipping_address" => ['required'],
             "msisdn" => ['required', Rule::unique('users', 'msisdn')->ignore($user->id)],
             "gender" => ['required', 'in:male,female,other'],
