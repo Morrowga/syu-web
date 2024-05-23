@@ -33,7 +33,7 @@ class ProfileUpdateRequest extends FormRequest
             "shipping_address" => ['required'],
             "msisdn" => ['required', Rule::unique('users', 'msisdn')->ignore($user->id)],
             "gender" => ['required', 'in:male,female,other'],
-            "is_above_eighteen" => ['required'],
+            "is_above_eighteen" => ['nullable'],
         ];
     }
 }
