@@ -43,10 +43,10 @@ const columns = ref([
         label: 'User',
         field: 'user',
     },
-    {
-        label: 'Paid Delivery',
-        field: 'paid_delivery_cost'
-    },
+    // {
+    //     label: 'Paid Delivery',
+    //     field: 'paid_delivery_cost'
+    // },
     {
         label: 'Order Status',
         field: 'order_status'

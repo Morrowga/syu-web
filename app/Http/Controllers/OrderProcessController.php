@@ -22,6 +22,11 @@ class OrderProcessController extends Controller
         return $this->orderProcessRepository->index();
     }
 
+    public function checkOrders()
+    {
+        return $this->orderProcessRepository->checkOrders();
+    }
+
     public function show(Order $order)
     {
         return $this->orderProcessRepository->show($order);

@@ -32,7 +32,7 @@ class AuthRepository implements AuthRepositoryInterface
 
                 $user = User::create([
                     'msisdn' => $request->msisdn,
-                    'name' => 'syuuser_' . generateRandomString(10),
+                    'name' => 'syu_' . generateRandomString(10),
                     'password' => Hash::make('syu2024'),
                     'email' => null,
                     'is_active' => 1,

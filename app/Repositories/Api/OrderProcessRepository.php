@@ -10,6 +10,7 @@ use App\Models\Setting;
 use Illuminate\Support\Str;
 use App\Traits\ApiResponses;
 use Illuminate\Http\Request;
+use App\Jobs\OrderExpiration;
 use App\Models\PaymentMethod;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -28,6 +29,7 @@ class OrderProcessRepository implements OrderProcessRepositoryInterface
 
             $user = Auth::user();
 
+            dispatch(new OrderExpiration($user->id));
 
             $orders = Order::where('user_id', $user->id)->orderBy('created_at', 'DESC')->with('products')->paginate(10);
 
@@ -41,7 +43,24 @@ class OrderProcessRepository implements OrderProcessRepositoryInterface
                 'to' => $orders->lastItem(),
             ];
 
-            return $this->success('Order fetched successfully.', $ordersArray);
+            return $this->success('Order fetched successfully.', $orders);
+
+        } catch (\Exception $e) {
+
+            return $this->error($e->getMessage(),500);
+
+        }
+    }
+
+    public function checkOrders()
+    {
+        try {
+
+            $user = Auth::user();
+
+            dispatch(new OrderExpiration($user->id));
+
+            return $this->success('Checking Order successfully.');
 
         } catch (\Exception $e) {
 

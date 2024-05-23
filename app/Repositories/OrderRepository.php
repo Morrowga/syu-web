@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use App\Jobs\OrderExpiration;
 use App\Traits\CRUDResponses;
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\OrderProductResource;
@@ -17,6 +18,8 @@ class OrderRepository implements OrderRepositoryInterface
     public function index()
     {
         try {
+
+            dispatch(new OrderExpiration());
 
             $orders = Order::with('user')->latest()->get();
 

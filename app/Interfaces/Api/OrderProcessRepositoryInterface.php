@@ -9,6 +9,8 @@ interface OrderProcessRepositoryInterface
 {
     public function index();
 
+    public function checkOrders();
+
     public function show(Order $order);
 
     public function showProductDetail(Request $request, Order $order);
