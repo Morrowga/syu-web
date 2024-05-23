@@ -85,8 +85,8 @@ const getChipColor = (orderStatus) => {
         <div v-if="dataProps.column.field == 'is_default'">
             <SetDefault :defaultId="dataProps.row.id" :defaultUrl="props.action_url + '/default'" :default="dataProps.row.is_default" />
         </div>
-        <div v-if="dataProps.column.field == 'shipping_city_id'">
-            <span>{{ dataProps.row.shippingcity?.name  }}</span>
+        <div v-if="dataProps.column.field == 'shippingcity'">
+            <span>{{ dataProps.row.shippingcity?.name_en  }}</span>
         </div>
         <div v-if="dataProps.column.field == 'paid_delivery_cost'">
             <span>{{ dataProps.row.paid_delivery_cost ? 'Yes'  : 'No' }}</span>

@@ -87,7 +87,7 @@ class OrderProcessRepository implements OrderProcessRepositoryInterface
                 "order_no" => $this->generateOrderNumber(),
                 "waiting_start_date" => $currentDate->toDateString(),
                 "waiting_end_date" => $currentDate->addDays($request->waiting_days)->toDateString(),
-                "order_expired_date" => $currentDate->addDays($setting->expire_day),
+                "order_expired_date" => Carbon::now()->addDays($setting->expire_day),
                 "order_status" => 'pending',
                 "total_price" => $request->total_price,
                 "overall_price" => $request->total_price,

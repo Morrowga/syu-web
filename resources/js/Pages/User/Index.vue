@@ -44,7 +44,7 @@ const columns = ref([
     },
     {
         label: 'Shipping City',
-        field: 'shipping_city_id'
+        field: 'shippingcity'
     },
     {
         label: 'Manage',
