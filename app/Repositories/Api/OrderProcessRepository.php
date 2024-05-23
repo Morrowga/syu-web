@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Setting;
+use App\Models\Category;
 use Illuminate\Support\Str;
 use App\Traits\ApiResponses;
 use Illuminate\Http\Request;
@@ -102,10 +103,19 @@ class OrderProcessRepository implements OrderProcessRepositoryInterface
 
             $user = Auth::user();
 
+            $products = json_decode($request->products, true);
+
+            $waiting_days = 0;
+
+            if(count($products) > 0)
+            {
+               $waiting_days = $this->findEndDate($products);
+            }
+
             $order = Order::create([
                 "order_no" => $this->generateOrderNumber(),
                 "waiting_start_date" => $currentDate->toDateString(),
-                "waiting_end_date" => $currentDate->addDays($request->waiting_days)->toDateString(),
+                "waiting_end_date" => $currentDate->addDays($waiting_days)->toDateString(),
                 "order_expired_date" => Carbon::now()->addDays($setting->expire_day),
                 "order_status" => 'pending',
                 "total_price" => $request->total_price,
@@ -114,13 +124,14 @@ class OrderProcessRepository implements OrderProcessRepositoryInterface
                 "note" => $request->note,
             ]);
 
-            $products = json_decode($request->products, true);
-
-            foreach($products as $product)
+            if(count($products) > 0)
             {
-                $order->products()->attach([
-                    $product['product_id'] => ['size_id' => $product['size_id'], 'quality_id' => $product['quality_id'], 'qty' => $product['qty']],
-                ]);
+                foreach($products as $product)
+                {
+                    $order->products()->attach([
+                        $product['product_id'] => ['size_id' => $product['size_id'], 'quality_id' => $product['quality_id'], 'qty' => $product['qty']],
+                    ]);
+                }
             }
 
             DB::commit();
@@ -216,5 +227,35 @@ class OrderProcessRepository implements OrderProcessRepositoryInterface
         $orderNumber = '#Order' . $randomString;
 
         return $orderNumber;
+    }
+
+    function findEndDate($products)
+    {
+        $categoryCounts = [];
+
+        foreach($products as $product)
+        {
+            $category_id = $product['category_id'];
+
+            if (isset($categoryCounts[$category_id])) {
+                $categoryCounts[$category_id]++;
+            } else {
+                $categoryCounts[$category_id] = 1;
+            }
+        }
+
+        $maxCount = max($categoryCounts);
+        $maxCategoryIds = array_keys($categoryCounts, $maxCount);
+
+        $maxCategoryId = $maxCategoryIds[0];
+
+        $find_category = Category::find($maxCategoryId);
+
+        if(!$find_category)
+        {
+            return 0;
+        }
+
+        return $find_category->waiting_days;
     }
 }

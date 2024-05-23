@@ -26,7 +26,6 @@ class OrderProcessCreateRequest extends FormRequest
             "total_price" => ['required', 'integer'],
             "note" => ['nullable'],
             "products" => ['required'],
-            "waiting_days" => ['required', 'integer'],
         ];
     }
 }
