@@ -12,7 +12,8 @@ const props = defineProps(['errors', 'category']);
 const form = useForm({
      name: "",
      price: 0,
-     category_id: props.category?.id
+     category_id: props.category?.id,
+     source_price: props.source_price
 });
 
 const saveQuality = () => {
@@ -66,6 +67,18 @@ const saveQuality = () => {
                                                 class="mt-2 block w-full"
                                             />
                                             <FormError v-if="errors.price" :message="errors.price" />
+                                        </div>
+                                        <div class="my-5">
+                                            <InputLabel for="source_price" value="Source Price" :required="true" />
+                                            <TextInput
+                                                v-model="form.source_price"
+                                                placeholder="Enter Source Price"
+                                                id="source_price"
+                                                type="number"
+                                                oninput="this.value = Math.abs(this.value)"
+                                                class="mt-2 block w-full"
+                                            />
+                                            <FormError v-if="errors.source_price" :message="errors.source_price" />
                                         </div>
                                         <div class="my-5 float-right">
                                             <Link :href="route('qualities.index', {category: props.category?.id})">

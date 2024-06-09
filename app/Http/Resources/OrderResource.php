@@ -24,7 +24,7 @@ class OrderResource extends JsonResource
             "waiting_start_date" => $this->waiting_start_date,
             "waiting_end_date" => $this->waiting_end_date,
             "total_price" => $this->total_price,
-            "overall_price" => $this->overall_price,
+            "save_with_points" => $this->save_with_points,
             "note" => $this->note,
             "order_expired_date" => $this->order_expired_date,
             "paid_delivery_cost" => $this->paid_delivery_cost,

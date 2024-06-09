@@ -4,6 +4,7 @@ import { Head, Link, useForm } from '@inertiajs/vue3';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import InputLabel from '@/Components/InputLabel.vue';
+import ImageDialog from '@/Components/ImageDialog.vue';
 import FormError from '@/Components/FormError.vue';
 import { ref, defineProps } from 'vue';
 
@@ -98,19 +99,19 @@ const updateStatus = (status) => {
                                 <div class="text-left">
                                     <p class="text-sm py-1 text-black">Waiting time left <span class="font-bold">{{ calculateDaysLeft(order.waiting_end_date)  }} days</span></p>
                                     <p class="py-1 text-black">Order will be expired at <span class="font-bold">{{ formatDate(order.order_expired_date) }}</span></p>
-                                    <p class="py-1 text-black">Total Amount is <span class="font-bold">{{ order.overall_price  }} MMK</span></p>
+                                    <p class="py-1 text-black">Total Amount is <span class="font-bold" v-html="order.save_with_points > 0 ? '<span class=&quot;text-red-500&quot; style=&quot;text-decoration: line-through;&quot;>' + (parseInt(order.total_price) + parseInt(order.save_with_points)) + '.00 MMK</span> ,' + order.total_price + ' MMK '  + '(' + '<span style=&quot;color: green;&quot;>' + order.save_with_points + '</span>' + ' Points Saved )'  : order.total_price + ' MMK'"></span></p>
+                                    <p class="py-1 text-black" v-if="order.paid_delviery_cost">Delivery Cost <span class="font-bold">{{ order.user.shippingcity?.cost  }}</span></p>
                                     <p class="py-1 text-black">Total Quantity is <span class="font-bold">{{ order.total_qty  }}</span></p>
                                 </div>
                             </VCol>
                             <VCol cols="6">
                                 <div class="text-right">
                                     <p class="font-bold text-capitalize py-1">{{ order.user.name }} [ {{ order.user.msisdn }} ], {{ order.user.shipping_address + ' ' + (order.user.shippingcity ? ', ' + order.user.shippingcity?.name_en : '')}}</p>
-                                    <p :class="'font-bold text-capitalize my-1 ' +  (order.paid_delviery_cost == true ? 'text-[#4caf4f]' : 'text-[#c51162]')">{{ order.paid_delviery_cost ? 'Paid Delivery Fees' : 'Delivery Fees Not Included' }}</p>
                                     <div v-if="order.order_status == 'pending'">
                                         <p class="font-bold text-capitalize py-2 text-[#f44336]">Payment Action is required</p>
                                     </div>
                                     <div v-else-if="order.order_status == 'confirmed'">
-                                        <PrimaryButton class="my-2 text-sm">View Payment</PrimaryButton>
+                                        <ImageDialog :src="order.image_url" :title="'Payment Screenshot'" :payment_method="order.payment_method" :paid_delviery_cost="order.paid_delviery_cost" />
                                     </div>
                                 </div>
                             </VCol>
@@ -161,6 +162,25 @@ const updateStatus = (status) => {
                 </VCard>
             </div>
         </div>
+        <!-- <v-dialog
+            v-model="dialog"
+            width="auto"
+            >
+            <v-card
+                max-width="400"
+                prepend-icon="mdi-update"
+                text="Your application will relaunch automatically after the update is complete."
+                title="Update in progress"
+            >
+                <template v-slot:actions>
+                <v-btn
+                    class="ms-auto"
+                    text="Ok"
+                    @click="dialog = false"
+                ></v-btn>
+                </template>
+            </v-card>
+        </v-dialog> -->
     </AuthenticatedLayout>
 </template>
 <style>

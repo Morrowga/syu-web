@@ -24,7 +24,8 @@ class SizeUpdateRequest extends FormRequest
         return [
             "name" => ['required'],
             "size" => ['required'],
-            "price" => ['required']
+            "price" => ['required'],
+            "source_price" => ['required']
         ];
     }
 }

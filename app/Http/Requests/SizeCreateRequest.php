@@ -25,7 +25,8 @@ class SizeCreateRequest extends FormRequest
             "name" => ['required'],
             "size" => ['required'],
             "price" => ['required'],
-            "category_id" => ['required']
+            "category_id" => ['required'],
+            "source_price" => ['required']
         ];
     }
 }

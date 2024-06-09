@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Repositories\SaleRepository;
 use App\Repositories\SizeRepository;
 use App\Repositories\UserRepository;
 use App\Repositories\OrderRepository;
@@ -12,6 +13,7 @@ use Illuminate\Support\ServiceProvider;
 use App\Repositories\Api\AuthRepository;
 use App\Repositories\CategoryRepository;
 use App\Repositories\Api\FeedsRepository;
+use App\Interfaces\SaleRepositoryInterface;
 use App\Interfaces\SizeRepositoryInterface;
 use App\Interfaces\UserRepositoryInterface;
 use App\Interfaces\OrderRepositoryInterface;
@@ -46,6 +48,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(OrderRepositoryInterface::class, OrderRepository::class);
         $this->app->bind(ShippingCityRepositoryInterface::class, ShippingCityRepository::class);
         $this->app->bind(PaymentMethodRepositoryInterface::class, PaymentMethodRepository::class);
+        $this->app->bind(SaleRepositoryInterface::class, SaleRepository::class);
 
         //api
         $this->app->bind(AuthRepositoryInterface::class, AuthRepository::class);

@@ -13,13 +13,13 @@ class Quality extends Model
 
     protected $table = 'qualities';
 
-    protected $fillable = ['name', 'price', 'is_active', 'is_default', 'category_id'];
+    protected $fillable = ['name', 'price', 'is_active', 'is_default', 'category_id', 'source_price'];
 
     protected $casts = [
         'is_active' => 'boolean',
         'is_default' => 'boolean'
     ];
-    
+
     public function category()
     {
         return $this->belongsTo(Category::class);

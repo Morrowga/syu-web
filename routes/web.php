@@ -7,12 +7,14 @@ use App\Http\Controllers\SizeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\BadgeController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\SalesController;
 use App\Http\Controllers\PosterController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\QualityController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\StickerController;
+use App\Http\Controllers\AnalysisController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\SizeHomeController;
 use App\Http\Controllers\BadgeSizeController;
@@ -103,6 +105,17 @@ Route::middleware('auth')->group(function () {
     //payment methods
     Route::resource('/payment-methods', PaymentMethodController::class);
     Route::post('/payment-methods/status/{payment_method}', [PaymentMethodController::class, 'setStatus'])->name('payment-methods.status');
+
+    //sales
+    Route::get('/sales', [SalesController::class, 'index'])->name('sales');
+    Route::get('/sales-data', [SalesController::class, 'getSalesData'])->name('sales-data');
+
+    //analysis
+    Route::get('/analysis', [AnalysisController::class, 'index'])->name('analysis');
+
+    Route::get('/test-qr', function() {
+        
+    });
 });
 
 require __DIR__.'/auth.php';

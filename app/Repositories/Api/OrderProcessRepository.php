@@ -117,7 +117,7 @@ class OrderProcessRepository implements OrderProcessRepositoryInterface
                 "order_expired_date" => Carbon::now()->addDays($setting->expire_day),
                 "order_status" => 'pending',
                 "total_price" => $request->total_price,
-                "overall_price" => $request->total_price,
+                "save_with_points" => $request->used_points,
                 "user_id" => $user->id,
                 "note" => $request->note,
             ]);
@@ -131,6 +131,8 @@ class OrderProcessRepository implements OrderProcessRepositoryInterface
                     ]);
                 }
             }
+
+            if($request->used_point > 0) { $user->points -= $request->used_point;}
 
             DB::commit();
 
@@ -160,7 +162,6 @@ class OrderProcessRepository implements OrderProcessRepositoryInterface
 
                     if ($user->shippingcity !== null) {
                         $order->update([
-                            "overall_price" => $request->paid_delivery_cost == true ? $order->total_price + $user->shippingcity->cost : $order->total_price,
                             "payment_method" => $request->payment_method,
                             "paid_delivery_cost" => $request->paid_delivery_cost == true ? 1 : 0,
                             "order_status" => 'confirmed'
@@ -255,5 +256,42 @@ class OrderProcessRepository implements OrderProcessRepositoryInterface
         }
 
         return $find_category->waiting_days;
+    }
+
+
+    // // ********************export search *************
+
+    public function exportSearchCsv(Request $request)
+    {
+        $query = Admin::query();
+
+        $admins = $query
+        ->when($request->query('input') == 'name', function ($query) use ($request) {
+            return $query->where('name', 'like', '%' . $request->query('name') . '%');
+        })
+        ->when($request->filled('role') && is_numeric($request->input('role')), function ($query) use ($request) {
+            return $query->where('role', $request->input('role'));
+        })
+        ->when($request->has('login_id'), function ($query) use ($request) {
+            return $query->where('login_id', 'like', '%' . $request->input('login_id') . '%');
+        })
+        ->when($request->has('gender'), function ($query) use ($request) {
+            return $query->where('gender', $request->input('gender'));
+        })
+        ->when($request->filled('id') && is_numeric($request->input('id')), function ($query) use ($request) {
+            return $query->where('id', $request->input('id'));
+        })
+        ->when($request->filled('active') && ($request->input('active') === '0' || $request->input('active') === '1'), function ($query) use ($request) {
+            return $query->where('active', $request->input('active'));
+        })
+        ->when($request->filled(['start_date', 'end_date']), function ($query) use ($request) {
+            $startDate = Carbon::createFromFormat('Y-m-d', $request->input('start_date'))->startOfDay();
+            $endDate = Carbon::createFromFormat('Y-m-d', $request->input('end_date'))->endOfDay();
+            return $query->whereBetween('created_at', [$startDate, $endDate]);
+        })
+        ->get();
+
+         return Excel::download(new AdminsExport($admins), 'admins.csv');
+
     }
 }

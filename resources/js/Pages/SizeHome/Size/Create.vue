@@ -13,7 +13,8 @@ const form = useForm({
      name: "",
      size: '',
      price: 0,
-     category_id: props.category?.id
+     category_id: props.category?.id,
+     source_price: 0,
 });
 const saveSize = () => {
     form.post(route('sizes.store'), {
@@ -77,6 +78,18 @@ const saveSize = () => {
                                                 class="mt-2 block w-full"
                                             />
                                             <FormError v-if="errors.price" :message="errors.price" />
+                                        </div>
+                                        <div class="my-5">
+                                            <InputLabel for="source_price" value="Source Price" :required="true" />
+                                            <TextInput
+                                                v-model="form.source_price"
+                                                placeholder="Enter Source Price"
+                                                id="source_price"
+                                                type="number"
+                                                oninput="this.value = Math.abs(this.value)"
+                                                class="mt-2 block w-full"
+                                            />
+                                            <FormError v-if="errors.source_price" :message="errors.source_price" />
                                         </div>
                                         <div class="my-5 float-right">
                                             <Link :href="route('sizes.index', {category: props.category?.id})">

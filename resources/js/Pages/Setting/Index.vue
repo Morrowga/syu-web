@@ -33,7 +33,7 @@ const settingForm = useForm
      expire_day: props.setting?.expire_day,
      categories: [],
      app_logo_img: null,
-     setting_type: 'general'
+     setting_type: 'general',
 });
 
 const openFileInput = () =>
@@ -240,7 +240,7 @@ const handleLogoUpload = (event) => {
                                                     v-model="settingForm.expire_day"
                                                     placeholder="Enter expire day"
                                                     id="expire_day"
-                                                    type="text"
+                                                    type="number"
                                                     class="mt-2 block w-full"
                                                 />
                                                 <FormError v-if="errors.expire_day" :message="errors.expire_day" />

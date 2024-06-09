@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Embedded Video</title>
+</head>
+<body>
+    <video id="videoPlayer" controls autoplay>
+        <source id="videoSource" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <script>
+        // Extract the base64-encoded video data from the URL
+        var videoData = "video_base64_data_here"; // Replace with the actual video data
+
+        // Decode the video data
+        var binaryData = atob(videoData);
+
+        // Create a blob from the binary data
+        var blob = new Blob([new Uint8Array(binaryData.length).map((_, i) => binaryData.charCodeAt(i))], { type: 'video/mp4' });
+
+        // Create object URL from the blob
+        var videoURL = URL.createObjectURL(blob);
+
+        // Set the source of the video element to the object URL
+        document.getElementById('videoSource').src = videoURL;
+    </script>
+</body>
+</html>

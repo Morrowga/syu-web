@@ -62,7 +62,7 @@ const columns = ref([
     <AuthenticatedLayout>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                <FontAwesomeIcon class="text-gray-500 text-lg mr-2" icon="note-sticky" />
+                <FontAwesomeIcon class="text-gray-500 text-lg mr-2" icon="location-dot" />
                 Shipping Cities
             </h2>
         </template>

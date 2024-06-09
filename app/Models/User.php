@@ -29,6 +29,7 @@ class User extends Authenticatable
         'shipping_city_id',
         'shipping_address',
         'is_active',
+        'points',
         'is_above_eighteen'
     ];
 

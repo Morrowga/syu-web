@@ -21,13 +21,15 @@ return new class extends Migration
             $table->dateTime('waiting_start_date');
             $table->dateTime('waiting_end_date');
             $table->decimal('total_price', 10, 2)->default(0);
-            $table->decimal('overall_price', 10, 2)->default(0);
+            $table->decimal('save_with_points', 10,2)->default(0);
             $table->text('note')->nullable();
             $table->dateTime('order_expired_date');
             $table->tinyInteger('paid_delivery_cost')->default(0);
             $table->string('payment_method')->nullable();
             $table->enum('order_status', ['pending', 'confirmed', 'expired', 'cancel', 'delivered'])->default('pending');
             $table->timestamps();
+
+            $table->index(['order_status', 'created_at']);
         });
     }
 

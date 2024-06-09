@@ -13,7 +13,8 @@ const form = useForm({
      name: props.size?.name,
      size: props.size?.size,
      price: props.size?.price,
-     category_id: props.size?.category?.id
+     category_id: props.size?.category?.id,
+     source_price: props.size?.source_price
 });
 
 const updateSize = () => {
@@ -78,6 +79,18 @@ const updateSize = () => {
                                                 class="mt-2 block w-full"
                                             />
                                             <FormError v-if="errors.price" :message="errors.price" />
+                                        </div>
+                                        <div class="my-5">
+                                            <InputLabel for="source_price" value="Source Price" :required="true" />
+                                            <TextInput
+                                                v-model="form.source_price"
+                                                placeholder="Enter source price"
+                                                id="source_price"
+                                                type="number"
+                                                oninput="this.value = Math.abs(this.value)"
+                                                class="mt-2 block w-full"
+                                            />
+                                            <FormError v-if="errors.source_price" :message="errors.source_price" />
                                         </div>
                                         <div class="my-5 float-right">
                                             <Link :href="route('sizes.index', {category: props.size?.category?.id})">

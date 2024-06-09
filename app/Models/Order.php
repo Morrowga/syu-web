@@ -25,11 +25,11 @@ class Order extends Model implements HasMedia
         'waiting_end_date',
         'total_price',
         'note',
-        'overall_price',
         'payment_method',
         'order_expired_date',
         'paid_delivery_cost',
-        'order_status'
+        'order_status',
+        'save_with_points'
     ];
 
     protected $casts = [

@@ -95,7 +95,8 @@ onMounted(() => {
 
                                         <template #content>
                                             <DropdownLink :href="route('users.index')"> Users </DropdownLink>
-                                            <DropdownLink :href="'/'"> Sales </DropdownLink>
+                                            <DropdownLink :href="route('sales')"> Sales </DropdownLink>
+                                            <DropdownLink :href="route('analysis')"> Analysis </DropdownLink>
                                         </template>
                                     </Dropdown>
                                 </NavDropDown>

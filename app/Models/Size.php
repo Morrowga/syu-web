@@ -13,7 +13,7 @@ class Size extends Model
 
     protected $table = 'sizes';
 
-    protected $fillable = ['name', 'size', 'price', 'is_active', 'is_default', 'category_id'];
+    protected $fillable = ['name', 'size', 'price', 'is_active', 'is_default', 'category_id', 'source_price'];
 
     protected $casts = [
         'is_active' => 'boolean',

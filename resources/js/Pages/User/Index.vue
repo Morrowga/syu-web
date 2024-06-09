@@ -47,6 +47,10 @@ const columns = ref([
         field: 'shippingcity'
     },
     {
+        label: 'Points',
+        field: 'points'
+    },
+    {
         label: 'Manage',
         field: 'normal_action',
         sortable: false

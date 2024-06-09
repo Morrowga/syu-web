@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('name');
+            $table->decimal('points', 10, 2)->default(100);
             $table->string('email')->unique()->nullable();
             $table->string('msisdn')->unique();
             $table->longText('shipping_address')->nullable();
