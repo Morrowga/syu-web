@@ -13,15 +13,28 @@ defineProps({
         type: String,
         default: 'Title'
     },
-    payment_method: {
-        type: String,
-        default: ''
+    transaction: {
+        type: Array,
+        default: []
     },
     paid_delviery_cost:{
         type: Boolean,
         default: false
     }
 })
+
+function formatDate(date) {
+  const options = {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true
+  };
+
+  return new Date(date).toLocaleString('en-US', options);
+}
 
 </script>
 
@@ -38,15 +51,62 @@ defineProps({
             max-width="400"
             prepend-icon="mdi-update"
             >
-            <VCardText>
-                <h1 class="font-bold text-xl">{{ title }}</h1>
-            </VCardText>
-            <VCardText class="my-1">
-                <span>
-                    Payment Method -
-                    <span class="font-bold mx-5">{{ payment_method ?? '' }}</span>
-                </span>
-                <p :class="'font-bold text-capitalize my-3 ' +  (paid_delviery_cost == true ? 'text-[#4caf4f]' : 'text-[#c51162]')">{{ paid_delviery_cost ? 'Paid Delivery Fees' : 'Delivery Fees Not Included' }}</p>
+            <template v-slot:title>
+                <div class="my-5">
+                    <span class="font-weight-black">{{ title }}</span>
+                </div>
+            </template>
+            <VCardText class="rounded-full">
+                <VCardText class="bg-surface-light">
+                    <span>
+                        Payment Method
+                    </span>
+                    <div class="font-bold mx-2 my-1">
+                        <span>
+                            {{ transaction?.payment_method ?? '' }}
+                        </span>
+                    </div>
+                </VCardText>
+                <VCardText class="bg-surface-light">
+                    <span>
+                        Delivery Fees
+                    </span>
+                    <div class="font-bold mx-2 my-1">
+                        <span>
+                            {{ paid_delviery_cost ? 'Paid' : 'No Paid' }}
+                        </span>
+                    </div>
+                </VCardText>
+                <VCardText class="bg-surface-light">
+                    <span>
+                        Account Name
+                    </span>
+                    <div class="font-bold mx-2 my-1">
+                        <span>
+                            {{ transaction?.account_name }}
+                        </span>
+                    </div>
+                </VCardText>
+                <VCardText class="bg-surface-light">
+                    <span>
+                        Transaction Id / No
+                    </span>
+                    <div class="font-bold mx-2 my-1">
+                        <span>
+                            {{ transaction?.transaction_id }}
+                        </span>
+                    </div>
+                </VCardText>
+                <VCardText class="bg-surface-light">
+                    <span>
+                        Paid Date
+                    </span>
+                    <div class="font-bold mx-2 my-1">
+                        <span>
+                            {{ formatDate(transaction?.created_at) }}
+                        </span>
+                    </div>
+                </VCardText>
             </VCardText>
             <VCardText>
                 <VImg :src="src" cover/>

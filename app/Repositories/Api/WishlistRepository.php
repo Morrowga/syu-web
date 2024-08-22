@@ -75,10 +75,15 @@ class WishlistRepository implements WishlistRepositoryInterface
 
             $productId = $request->product_id;
 
-            $wishlist = Wishlist::create([
-                "user_id" => $user->id,
-                "product_id" => $productId
-            ]);
+           $exist = Wishlist::where('user_id', $user->id)->where('product_id', $request->product_id)->first();
+
+            if(empty($exist))
+            {
+                $wishlist = Wishlist::create([
+                    "user_id" => $user->id,
+                    "product_id" => $productId
+                ]);
+            }
 
             DB::commit();
 

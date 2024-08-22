@@ -21,4 +21,8 @@ interface AuthRepositoryInterface
     public function getShippingCities();
 
     public function getProfile();
+
+    public function setAge(Request $request);
+
+    public function checkToken(Request $request);
 }

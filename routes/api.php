@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\FeedsController;
 use App\Http\Controllers\Api\WishlistController;
 use App\Http\Controllers\OrderProcessController;
+use App\Http\Controllers\Api\NotificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,11 +28,13 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::get('/setting', [AuthController::class, 'setting']);
 Route::post('/send-otp', [AuthController::class, 'sendOtp']);
 Route::post('/verify-otp', [AuthController::class, 'verifyOtp']);
+Route::post('/check-token', [AuthController::class, 'checkToken']);
 
 Route::middleware('auth:sanctum')->group(function () {
     //auth
     Route::put('/users/update-profile', [AuthController::class, 'updateProfile']);
     Route::get('/users/profile', [AuthController::class, 'getProfile']);
+    Route::post('/users/age', [AuthController::class, 'setAge']);
     Route::post('/logout', [AuthController::class, 'logout']);
 
     //shipping city
@@ -48,8 +51,15 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/orders', [OrderProcessController::class, 'index']);
     Route::post('/orders', [OrderProcessController::class, 'store']);
     Route::get('/orders/check', [OrderProcessController::class, 'checkOrders']);
+    Route::post('/orders/cancel/{order}', [OrderProcessController::class, 'cancelOrder']);
     Route::get('/orders/detail/{order}', [OrderProcessController::class, 'show']);
     Route::get('/orders/order-product-detail/{order}', [OrderProcessController::class, 'showProductDetail']);
     Route::patch('/orders/payment/{order}', [OrderProcessController::class, 'paid']);
     Route::get('/orders/payment-methods', [OrderProcessController::class, 'paymentMethods']);
+
+    //notifications
+    Route::get('/notifications', [NotificationController::class, 'index']);
+    Route::post('/notifications/delete/{notification}', [NotificationController::class, 'delete']);
+    Route::post('/notifications/read/{notification}', [NotificationController::class, 'read']);
+    Route::post('/notifications/clear', [NotificationController::class, 'clear']);
 });

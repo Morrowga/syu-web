@@ -43,13 +43,21 @@ const columns = ref([
         label: 'User',
         field: 'user',
     },
-    // {
-    //     label: 'Paid Delivery',
-    //     field: 'paid_delivery_cost'
-    // },
+    {
+        label: 'Cancel Status',
+        field: 'order_expired_date'
+    },
     {
         label: 'Order Status',
         field: 'order_status'
+    },
+    {
+        label: 'Payment',
+        field: 'payment_type'
+    },
+    {
+        label: 'Date',
+        field: 'created_at'
     },
     {
         label: 'Manage',

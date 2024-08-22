@@ -20,27 +20,33 @@ class SaleRepository implements SaleRepositoryInterface
     public function index(Request $request)
     {
         try {
-
             $start_date_param = $request->query('start_date');
             $end_date_param = $request->query('end_date');
+            $orders = collect();
 
-            $parsedStartDate = Carbon::createFromFormat('Y-m-d', $start_date_param);
+            if ($request->query('type') != 'lifetime' && $start_date_param && $end_date_param) {
+                $parsedStartDate = Carbon::createFromFormat('Y-m-d', $start_date_param);
+                $parsedEndDate = Carbon::createFromFormat('Y-m-d', $end_date_param);
 
-            $parsedEndDate = Carbon::createFromFormat('Y-m-d', $end_date_param);
+                $start_date = $parsedStartDate->format('Y-m-d');
+                $end_date = $parsedEndDate->format('Y-m-d');
 
-            $start_date = $parsedStartDate->format('Y-m-d');
-            $end_date = $parsedEndDate->format('Y-m-d');
+                Order::whereBetween('created_at', [$start_date, $end_date])
+                    ->where('order_status', 'confirmed')
+                    ->with('products')
+                    ->chunk(1000, function ($chunk) use (&$orders) {
+                        $orders = $orders->merge($chunk);
+                    });
+            } else {
+                Order::where('order_status', 'confirmed')
+                ->with('products')
+                ->chunk(1000, function ($chunk) use (&$orders) {
+                    $orders = $orders->merge($chunk);
+                });
+            }
 
-            $orders = Order::whereBetween('created_at', [$start_date, $end_date])->where('order_status', 'confirmed')->with('products')->get();
-
-            $overall = $this->getOverAllSalesByDate($orders);
-
-            $eachCategoryData = $this->getSalesDataWithCategoryByDate($orders);
-
-            return [
-                "overall" => $overall,
-                "each_category_data" => $eachCategoryData
-            ];
+            $overall = $this->getOverAllSales($orders);
+            $eachCategoryData = $this->getSalesDataWithCategory($orders);
 
             return $this->success('Sales Data fetched successfully.', [
                 "overall" => $overall,
@@ -48,14 +54,11 @@ class SaleRepository implements SaleRepositoryInterface
             ]);
 
         } catch (\Exception $e) {
-
             return $this->error($e->getMessage(), 500);
-
         }
-
     }
 
-    public function getOverAllSalesByDate($orders)
+    public function getOverAllSales($orders)
     {
         $totalOrders = $orders->count();
 
@@ -63,9 +66,9 @@ class SaleRepository implements SaleRepositoryInterface
 
         $totalOrderAmount = $orders->sum('total_price') + $totalSaveWithPoints;
 
-        $totalProductCount = $this->getOrderProductsCountByDate($orders);
+        $totalProductCount = $this->getOrderProductsCount($orders);
 
-        $totalDemand = $this->getTotalDemandByDate($orders);
+        $totalDemand = $this->getTotalDemand($orders);
 
         return [
             "total_orders" => $totalOrders,
@@ -77,7 +80,7 @@ class SaleRepository implements SaleRepositoryInterface
         ];
     }
 
-    public function getSalesDataWithCategoryByDate($orders)
+    public function getSalesDataWithCategory($orders)
     {
         $categoriesData = collect();
 
@@ -103,15 +106,32 @@ class SaleRepository implements SaleRepositoryInterface
 
                 $totalProfit = $totalAmount - $totalDemand;
 
-                $categoriesData->push([
-                    'category' => $categoryName,
-                    'data' => [
-                        'total_amount' => $totalAmount,
-                        'total_product_count' => $totalProductCount,
-                        'total_demand' => $totalDemand,
-                        'total_profit' => $totalProfit
-                    ]
-                ]);
+                // Check if the category already exists in the collection
+                $categoryData = $categoriesData->firstWhere('category', $categoryName);
+
+                if ($categoryData) {
+                    // Update the existing category data
+                    $categoryData['data']['total_amount'] += $totalAmount;
+                    $categoryData['data']['total_product_count'] += $totalProductCount;
+                    $categoryData['data']['total_demand'] += $totalDemand;
+                    $categoryData['data']['total_profit'] += $totalProfit;
+
+                    // Update the collection with the modified data
+                    $categoriesData = $categoriesData->map(function ($item) use ($categoryData) {
+                        return $item['category'] === $categoryData['category'] ? $categoryData : $item;
+                    });
+                } else {
+                    // Add a new entry for the category
+                    $categoriesData->push([
+                        'category' => $categoryName,
+                        'data' => [
+                            'total_amount' => $totalAmount,
+                            'total_product_count' => $totalProductCount,
+                            'total_demand' => $totalDemand,
+                            'total_profit' => $totalProfit
+                        ]
+                    ]);
+                }
             });
         }
 
@@ -120,7 +140,7 @@ class SaleRepository implements SaleRepositoryInterface
 
 
 
-    public function getOrderProductsCountByDate($orders)
+    public function getOrderProductsCount($orders)
     {
         $productCount = 0;
 
@@ -136,7 +156,7 @@ class SaleRepository implements SaleRepositoryInterface
     }
 
 
-    public function getTotalDemandByDate($orders)
+    public function getTotalDemand($orders)
     {
         $totalProfit = 0;
         $totalDemand = 0;

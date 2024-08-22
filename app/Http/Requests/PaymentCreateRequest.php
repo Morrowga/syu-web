@@ -22,7 +22,8 @@ class PaymentCreateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "image" => ['required', 'file'],
+            "account_name" => ['required'],
+            "transaction_id" => ['required'],
             "payment_method" => ['required'],
             "paid_delivery_cost" => ['required', 'boolean']
         ];

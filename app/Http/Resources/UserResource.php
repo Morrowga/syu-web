@@ -24,6 +24,7 @@ class UserResource extends JsonResource
             "is_above_eighteen" => $this->is_above_eighteen,
             "is_active" => $this->is_active,
             "shippingcity" => $this->shippingcity,
+            "extra_address" => $this->extra_address
         ];
     }
 }

@@ -59,4 +59,13 @@ class AuthController extends Controller
         return $this->authRepository->getProfile();
     }
 
+    public function setAge(Request $request)
+    {
+        return $this->authRepository->setAge($request);
+    }
+
+    public function checkToken(Request $request)
+    {
+        return $this->authRepository->checkToken($request);
+    }
 }

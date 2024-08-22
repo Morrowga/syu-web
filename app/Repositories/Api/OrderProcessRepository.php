@@ -8,6 +8,7 @@ use App\Models\Order;
 use App\Models\Product;
 use App\Models\Setting;
 use App\Models\Category;
+use App\Models\Transaction;
 use Illuminate\Support\Str;
 use App\Traits\ApiResponses;
 use Illuminate\Http\Request;
@@ -16,6 +17,7 @@ use App\Models\PaymentMethod;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\OrderResource;
+use App\Notifications\InAppNotification;
 use App\Http\Resources\OrderProductResource;
 use App\Http\Resources\PaymentMethodResource;
 use App\Interfaces\Api\OrderProcessRepositoryInterface;
@@ -32,7 +34,7 @@ class OrderProcessRepository implements OrderProcessRepositoryInterface
 
             dispatch(new OrderExpiration($user->id));
 
-            $orders = Order::where('user_id', $user->id)->orderBy('created_at', 'DESC')->with('products')->paginate(10);
+            $orders = Order::where('user_id', $user->id)->orderBy('created_at', 'DESC')->with('products', 'transaction')->paginate(10);
 
             $ordersArray = [
                 'data' => OrderResource::collection($orders),
@@ -70,10 +72,28 @@ class OrderProcessRepository implements OrderProcessRepositoryInterface
         }
     }
 
+    public function cancelOrder(Order $order)
+    {
+        try {
+
+            $order->order_status = 'cancel';
+            $order->save();
+
+            return $this->success('Order is now cancled.');
+
+        } catch (\Exception $e) {
+
+            return $this->error($e->getMessage(),500);
+
+        }
+    }
+
     public function show(Order $order)
     {
         if(!empty($order))
         {
+            // return $order;
+
             return $this->success('Order fetched successfully.', new OrderResource($order));
         }
 
@@ -115,9 +135,10 @@ class OrderProcessRepository implements OrderProcessRepositoryInterface
                 "waiting_start_date" => Carbon::now(),
                 "waiting_end_date" => Carbon::now()->addDays($waiting_days),
                 "order_expired_date" => Carbon::now()->addDays($setting->expire_day),
-                "order_status" => 'pending',
+                "order_status" =>  $request->payment_type == 'cod' ? 'confirmed' : 'pending',
                 "total_price" => $request->total_price,
                 "save_with_points" => $request->used_points,
+                "payment_type" => $request->payment_type,
                 "user_id" => $user->id,
                 "note" => $request->note,
             ]);
@@ -132,7 +153,19 @@ class OrderProcessRepository implements OrderProcessRepositoryInterface
                 }
             }
 
-            if($request->used_point > 0) { $user->points -= $request->used_point;}
+            if($request->used_points > 0) {
+                $user->points -= $request->used_points;
+                $user->save();
+            }
+
+            $notification = [
+                'title' => 'Orders',
+                'message' => 'Your order ( ' . $order->order_no . ' )  has been placed.',
+                'type' => 'order',
+                'screen_id' => $order->id,
+            ];
+
+            $user->notify(new InAppNotification($notification));
 
             DB::commit();
 
@@ -154,18 +187,25 @@ class OrderProcessRepository implements OrderProcessRepositoryInterface
         try {
             if($order->order_status == 'pending')
             {
-                if (request()->hasFile('image') && request()->file('image')->isValid()) {
-
-                    $order->addMediaFromRequest('image')->toMediaCollection('images', 'payment');
-
                     $user = Auth::user();
 
                     if ($user->shippingcity !== null) {
                         $order->update([
-                            "payment_method" => $request->payment_method,
                             "paid_delivery_cost" => $request->paid_delivery_cost == true ? 1 : 0,
-                            "order_status" => 'confirmed'
+                            "order_status" => 'confirmed',
                         ]);
+
+                        $transaction = Transaction::create($request->merge(['order_id' => $order->id])->all());
+
+                        $notification = [
+                            'title' => 'Orders',
+                            'message' => 'Your order ( ' . $order->order_no . ' )  is in reviewing progress.',
+                            'type' => 'order',
+                            'screen_id' => $order->id,
+                        ];
+
+                        $user->notify(new InAppNotification($notification));
+
 
                         DB::commit();
 
@@ -173,9 +213,6 @@ class OrderProcessRepository implements OrderProcessRepositoryInterface
                     }
 
                     return $this->error('Shipping Address does not exist in current user.', 400);
-                }
-
-                return $this->error('Payment Screenshot is invalid.', 400);
 
             } else if($order->order_status == 'confirmed') {
 

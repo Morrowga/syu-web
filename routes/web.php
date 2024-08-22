@@ -112,9 +112,10 @@ Route::middleware('auth')->group(function () {
 
     //analysis
     Route::get('/analysis', [AnalysisController::class, 'index'])->name('analysis');
+    Route::get('/analysis-data', [AnalysisController::class, 'getAnalysisData'])->name('analysis-data');
 
     Route::get('/test-qr', function() {
-        
+
     });
 });
 

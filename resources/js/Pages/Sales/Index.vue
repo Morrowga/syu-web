@@ -6,28 +6,42 @@ import axios from 'axios';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 
 const currentDate = new Date().toISOString().split('T')[0];
-const startDate = ref(currentDate);
+const date = ref('');
+const startDate = ref('');
 const endDate = ref(currentDate);
 const sales = ref([]);
 
-const fetchSalesData = async () =>  {
+
+const fetchSalesData = async (type) =>  {
     try {
-    const response = await axios.get('/sales-data?start_date=' + startDate.value + '&end_date=' + endDate.value);
-    sales.value = response.data;
+        let response;
+
+        if(type == 'all')
+        {
+            response = await axios.get('/sales-data?type=lifetime');
+        } else {
+            response = await axios.get('/sales-data?start_date=' + startDate.value + '&end_date=' + endDate.value + '&type=date');
+        }
+
+        sales.value = response.data.data;
     } catch (error) {
         console.error('Error fetching data:', error);
     }
 }
 
 const handleDate = () => {
-    startDate.value = new Date(startDate.value).toISOString().split('T')[0];
-    endDate.value = new Date(endDate.value).toISOString().split('T')[0];
+    startDate.value = new Date(date.value[0]).toISOString().split('T')[0];
+    endDate.value = new Date(date.value[1]).toISOString().split('T')[0];
 
-    fetchSalesData();
+    fetchSalesData('date');
+}
+
+const getOverAll = () => {
+    fetchSalesData('all');
 }
 
 onMounted(() => {
-    fetchSalesData();
+    getOverAll();
 });
 
 </script>
@@ -46,14 +60,11 @@ onMounted(() => {
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <VRow>
-                    <VCol cols="6">
+                    <VCol cols="12">
                         <div class="d-flex justify-start">
-                            <VueDatePicker v-model="startDate" :enable-time-picker="false"></VueDatePicker>
-                            <span class="text-xl mx-5 mt-2">
-                                <FontAwesomeIcon class="text-black opacity-50" icon="right-long" />
-                            </span>
-                            <VueDatePicker v-model="endDate" :enable-time-picker="false"></VueDatePicker>
-                            <PrimaryButton class="mx-3" @click="handleDate()">Get</PrimaryButton>
+                            <VueDatePicker v-model="date" style="width: 25%" :placeholder="'Select a date'" :enable-time-picker="false" model-auto range></VueDatePicker>
+                            <PrimaryButton class="mx-3" :disabled="disableBtn" @click="handleDate">Get</PrimaryButton>
+                            <PrimaryButton class="mx-3" :disabled="disableBtn" @click="getOverAll">Over All</PrimaryButton>
                         </div>
                     </VCol>
                 </VRow>

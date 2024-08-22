@@ -11,6 +11,8 @@ interface OrderProcessRepositoryInterface
 
     public function checkOrders();
 
+    public function cancelOrder(Order $order);
+
     public function show(Order $order);
 
     public function showProductDetail(Request $request, Order $order);
@@ -20,4 +22,5 @@ interface OrderProcessRepositoryInterface
     public function paid(Request $request, Order $order);
 
     public function paymentMethods();
+
 }

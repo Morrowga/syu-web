@@ -13,6 +13,7 @@ use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Resources\SettingResource;
+use Laravel\Sanctum\PersonalAccessToken;
 use App\Http\Resources\ShippingCityResource;
 use App\Interfaces\Api\AuthRepositoryInterface;
 
@@ -193,6 +194,46 @@ class AuthRepository implements AuthRepositoryInterface
             $user->load('shippingcity');
 
             return $this->success('User Profile fetched successfully.', new UserResource($user));
+
+        } catch (\Exception $e) {
+
+            return $this->error($e->getMessage(), 500);
+        }
+    }
+
+    public function setAge(Request $request)
+    {
+        try {
+
+            $user = Auth::user();
+
+            $user->is_above_eighteen = $request->is_above_eighteen;
+            $user->save();
+
+            return $this->success('User Age updated successfully.', new UserResource($user));
+
+        } catch (\Exception $e) {
+
+            return $this->error($e->getMessage(), 500);
+        }
+    }
+
+
+    public function checkToken(Request $request)
+    {
+        try {
+
+            $token = $request->token;
+
+            $personalAccessToken = PersonalAccessToken::findToken($token);
+
+            if (!$personalAccessToken) {
+                return $this->error('invalid', 401);
+            }
+
+            $user = $personalAccessToken->tokenable;
+
+            return $this->success('valid', []);
 
         } catch (\Exception $e) {
 

@@ -27,6 +27,7 @@ class OrderProcessCreateRequest extends FormRequest
             "note" => ['nullable'],
             "used_points" => ['required', 'integer'],
             "products" => ['required'],
+            "payment_type" => ['required', 'in:cod,pp']
         ];
     }
 }

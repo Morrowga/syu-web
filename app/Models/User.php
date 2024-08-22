@@ -30,7 +30,8 @@ class User extends Authenticatable
         'shipping_address',
         'is_active',
         'points',
-        'is_above_eighteen'
+        'is_above_eighteen',
+        'extra_address'
     ];
 
     protected $appends = ['avatar'];

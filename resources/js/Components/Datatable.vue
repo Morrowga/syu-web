@@ -1,10 +1,11 @@
 <script setup>
-import {ref, defineProps } from 'vue';
+import {ref, defineProps, onMounted } from 'vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import DeleteButton from '@/Components/DeleteButton.vue';
 import StatusBadge from '@/Components/StatusBadge.vue';
 import SetDefault from '@/Components/SetDefault.vue';
 import { Link ,Head } from '@inertiajs/vue3';
+import moment from 'moment';
 
 const props = defineProps({
     columns:
@@ -56,6 +57,27 @@ const getChipColor = (orderStatus) => {
   }
 };
 
+const calculateHoursLeft = (order_expired_date) => {
+  const now = moment();
+  const expirationDate = moment(order_expired_date);
+  const diff = expirationDate.diff(now);
+
+  if (diff <= 0) {
+    return true;
+  }
+
+  return false;
+};
+
+const formatOrderDate = (date) => {
+  return moment(date).format('MMM, DD, YYYY hh:mm A');
+};
+
+
+onMounted(() => {
+    calculateHoursLeft();
+});
+
 </script>
 <template>
     <vue-good-table
@@ -88,8 +110,22 @@ const getChipColor = (orderStatus) => {
         <div v-if="dataProps.column.field == 'shippingcity'">
             <span>{{ dataProps.row.shippingcity?.name_en  }}</span>
         </div>
+        <div v-if="dataProps.column.field == 'payment_type'">
+            <span>{{ dataProps.row.payment_type == 'cod' ? 'COD' : 'Prepaid'  }}</span>
+        </div>
+        <div v-if="dataProps.column.field == 'order_expired_date'">
+            <div v-if="dataProps.row.payment_type != 'cod'">
+                <VChip :color="calculateHoursLeft(dataProps.row.order_expired_date) ? 'red' : 'green'"  class="text-capitalize text-white" variant="flat">{{calculateHoursLeft(dataProps.row.order_expired_date) ? 'No' : 'Yes'}} </VChip>
+            </div>
+            <div v-else>
+                <VChip :color="'green'"  class="text-capitalize text-white" variant="flat">Yes</VChip>
+            </div>
+        </div>
         <div v-if="dataProps.column.field == 'paid_delivery_cost'">
             <span>{{ dataProps.row.paid_delivery_cost ? 'Yes'  : 'No' }}</span>
+        </div>
+        <div v-if="dataProps.column.field == 'created_at'">
+            <span>{{ formatOrderDate(dataProps.row.created_at) }}</span>
         </div>
         <div v-if="dataProps.column.field == 'user'">
             <span>{{ dataProps.row.user?.name }}</span>

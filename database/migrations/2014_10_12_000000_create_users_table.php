@@ -20,7 +20,8 @@ return new class extends Migration
             $table->longText('shipping_address')->nullable();
             $table->enum('gender', ['male', 'female', 'other', 'empty'])->default('empty');
             $table->timestamp('email_verified_at')->nullable();
-            $table->tinyInteger('is_above_eighteen')->default(0);
+            $table->tinyInteger('is_above_eighteen')->nullable();
+            $table->text('extra_address')->nullable();
             $table->string('password');
             $table->tinyInteger('is_active')->default(1);
             $table->rememberToken();

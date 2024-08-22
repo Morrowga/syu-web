@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Jobs\OrderExpiration;
 use App\Traits\CRUDResponses;
 use Illuminate\Support\Facades\DB;
+use App\Notifications\InAppNotification;
 use App\Http\Resources\OrderProductResource;
 use App\Interfaces\OrderRepositoryInterface;
 
@@ -21,7 +22,7 @@ class OrderRepository implements OrderRepositoryInterface
 
             dispatch(new OrderExpiration());
 
-            $orders = Order::with('user')->latest()->get();
+            $orders = Order::with('user', 'products', 'transaction')->latest()->get();
 
             return $this->success('Fetched Orders', $orders);
 
@@ -68,6 +69,17 @@ class OrderRepository implements OrderRepositoryInterface
             if($order)
             {
                 $order->update($request->all());
+
+                $notification = [
+                    'title' => 'Orders',
+                    'message' => 'Your order ( ' . $order->order_no . ' ) is now ' . ($order->order_status == 'confirmed' ? 'approved' : ($order->order_status == 'cancel' ? 'canceled' : $order->order_status)) . '.',
+                    'type' => 'order',
+                    'screen_id' => $order->id,
+                ];
+
+                $user = $order->user;
+
+                $user->notify(new InAppNotification($notification));
 
                 DB::commit();
 

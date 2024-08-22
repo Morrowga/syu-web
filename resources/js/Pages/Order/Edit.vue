@@ -6,10 +6,12 @@ import TextInput from '@/Components/TextInput.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import ImageDialog from '@/Components/ImageDialog.vue';
 import FormError from '@/Components/FormError.vue';
-import { ref, defineProps } from 'vue';
+import { ref, defineProps, onMounted } from 'vue';
+import moment from 'moment';
 
 const props = defineProps(['errors', 'order_detail', 'data']);
 
+const timeLeft = ref('');
 
 const form = useForm({
     order_status: 'pending'
@@ -60,6 +62,19 @@ const calculateDaysLeft = (endDate) => {
   return differenceDays;
 };
 
+const calculateHoursLeft = () => {
+  const now = moment();
+  const expirationDate = moment(order.order_expired_date);
+  const diff = expirationDate.diff(now);
+
+  if (diff <= 0) {
+    timeLeft.value = 'Expired';
+  } else {
+    const duration = moment.duration(diff);
+    timeLeft.value = Math.floor(duration.asHours());
+  }
+};
+
 const updateStatus = (status) => {
 
     form.order_status = status;
@@ -70,8 +85,11 @@ const updateStatus = (status) => {
         onError: (error) => {
         },
     });
-
 }
+
+onMounted(() => {
+    calculateHoursLeft();
+});
 
 </script>
 
@@ -98,8 +116,9 @@ const updateStatus = (status) => {
                             <VCol cols="6">
                                 <div class="text-left">
                                     <p class="text-sm py-1 text-black">Waiting time left <span class="font-bold">{{ calculateDaysLeft(order.waiting_end_date)  }} days</span></p>
-                                    <p class="py-1 text-black">Order will be expired at <span class="font-bold">{{ formatDate(order.order_expired_date) }}</span></p>
-                                    <p class="py-1 text-black">Total Amount is <span class="font-bold" v-html="order.save_with_points > 0 ? '<span class=&quot;text-red-500&quot; style=&quot;text-decoration: line-through;&quot;>' + (parseInt(order.total_price) + parseInt(order.save_with_points)) + '.00 MMK</span> ,' + order.total_price + ' MMK '  + '(' + '<span style=&quot;color: green;&quot;>' + order.save_with_points + '</span>' + ' Points Saved )'  : order.total_price + ' MMK'"></span></p>
+                                    <!-- <p class="py-1 text-black">Order will be expired at <span class="font-bold">{{ formatDate(order.order_expired_date) }}</span></p> -->
+                                    <p class="py-1 text-black">Order Date <span class="font-bold">{{ formatDate(order.created_at) }}</span></p>
+                                    <p class="py-1 text-black">Total Amount is <span class="font-bold" v-html="order.save_with_points > 0 ? '<span class=&quot;text-red-500&quot; style=&quot;text-decoration: line-through;&quot;>' + (parseInt(order.total_price))+ '.00 MMK</span> ,' + (parseInt(order.total_price) - order.save_with_points) + ' MMK '  + '(' + '<span style=&quot;color: green;&quot;>' + order.save_with_points + '</span>' + ' Points Saved )'  : order.total_price + ' MMK'"></span></p>
                                     <p class="py-1 text-black" v-if="order.paid_delviery_cost">Delivery Cost <span class="font-bold">{{ order.user.shippingcity?.cost  }}</span></p>
                                     <p class="py-1 text-black">Total Quantity is <span class="font-bold">{{ order.total_qty  }}</span></p>
                                 </div>
@@ -107,11 +126,19 @@ const updateStatus = (status) => {
                             <VCol cols="6">
                                 <div class="text-right">
                                     <p class="font-bold text-capitalize py-1">{{ order.user.name }} [ {{ order.user.msisdn }} ], {{ order.user.shipping_address + ' ' + (order.user.shippingcity ? ', ' + order.user.shippingcity?.name_en : '')}}</p>
-                                    <div v-if="order.order_status == 'pending'">
-                                        <p class="font-bold text-capitalize py-2 text-[#f44336]">Payment Action is required</p>
+                                    <p class="font-bold text-uppercase py-2">{{ 'Payment Type ------ ' + (order.payment_type == 'cod' ? 'COD' : 'Prepaid') }}</p>
+                                    <div v-if="order.payment_type == 'cod'">
+                                        <p class="font-bold text-capitalize py-2 text-[#f44336]" v-if="timeLeft === 'Expired'">User cannot cancel this order now.</p>
+                                        <p class="font-bold text-capitalize py-2" v-else>Canceling Order Time Left: {{ timeLeft }} hours</p>
                                     </div>
-                                    <div v-else-if="order.order_status == 'confirmed'">
-                                        <ImageDialog :src="order.image_url" :title="'Payment Screenshot'" :payment_method="order.payment_method" :paid_delviery_cost="order.paid_delviery_cost" />
+                                    <div v-if="order.order_status == 'pending'">
+                                        <p class="font-bold py-2 text-[#f44336]">Payment action is required</p>
+                                    </div>
+                                    <div v-else-if="order.order_status == 'confirmed' && order.payment_type == 'pp'">
+                                        <ImageDialog :src="''" :title="'Payment Info'" :paid_delviery_cost="order.paid_delviery_cost" :transaction="order?.transaction" />
+                                    </div>
+                                    <div v-else-if="order.order_status == 'cancel' && order.payment_type == 'pp' && order.payment_type == 'pp'">
+                                        <ImageDialog :src="''" :title="'Payment Info'" :paid_delviery_cost="order.paid_delviery_cost" :transaction="order?.transaction" />
                                     </div>
                                 </div>
                             </VCol>
@@ -156,7 +183,7 @@ const updateStatus = (status) => {
                                 <PrimaryButton>Back</PrimaryButton>
                             </Link>
                             <PrimaryButton class="mx-2 bg-red" @click="updateStatus('cancel')">Cancel</PrimaryButton>
-                            <PrimaryButton class="bg-success" @click="updateStatus('confirmed')">Approve</PrimaryButton>
+                            <PrimaryButton v-if="order?.order_status == 'pending'" class="bg-success" @click="updateStatus('confirmed')">Approve</PrimaryButton>
                         </div>
                     </VCardText>
                 </VCard>

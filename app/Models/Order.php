@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\User;
 use App\Traits\UUID;
 use App\Models\Product;
+use App\Models\Transaction;
 use App\Models\OrderProduct;
 use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Database\Eloquent\Model;
@@ -25,11 +26,11 @@ class Order extends Model implements HasMedia
         'waiting_end_date',
         'total_price',
         'note',
-        'payment_method',
         'order_expired_date',
         'paid_delivery_cost',
         'order_status',
-        'save_with_points'
+        'save_with_points',
+        'payment_type'
     ];
 
     protected $casts = [
@@ -50,6 +51,11 @@ class Order extends Model implements HasMedia
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function transaction()
+    {
+        return $this->hasOne(Transaction::class);
     }
 
     public function products()

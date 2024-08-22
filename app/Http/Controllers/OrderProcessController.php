@@ -27,6 +27,11 @@ class OrderProcessController extends Controller
         return $this->orderProcessRepository->checkOrders();
     }
 
+    public function cancelOrder(Order $order)
+    {
+        return $this->orderProcessRepository->cancelOrder($order);
+    }
+
     public function show(Order $order)
     {
         return $this->orderProcessRepository->show($order);
