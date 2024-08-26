@@ -17,7 +17,7 @@ class CategoryResource extends JsonResource
         return [
             "id" => $this->id,
             "name" => $this->name,
-            "image_url" => $this->image_url,
+            "image_url" => $this->image_url == null ? env('APP_URL') . '/images/sticker.jpg' : $this->image_url,
             "category_id" => $this->category_id,
             "limitation" => $this->limitation,
             "waiting_days" => $this->waiting_days,

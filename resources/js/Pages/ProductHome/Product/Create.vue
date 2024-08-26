@@ -43,7 +43,7 @@ const handleFileUpload = (event) => {
 </script>
 
 <template>
-    <Head :title="props.category?.name + ' Creation'" class="capitalize" />
+    <Head :title="props.category?.name + ' Creation'" class="capitalize"  style="text-transform: capitalize;" />
 
     <AuthenticatedLayout>
         <template #header>

@@ -62,7 +62,7 @@ const columns = ref([
 </script>
 
 <template>
-    <Head :title="props.category?.name" class="capitalize" />
+    <Head :title="props.category?.name" class="capitalize" style="text-transform: capitalize;" />
 
     <AuthenticatedLayout>
         <template #header>

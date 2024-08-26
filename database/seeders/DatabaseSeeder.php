@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Quality;
 use App\Models\Setting;
 use App\Models\Category;
+use App\Models\ShippingCity;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -27,7 +28,14 @@ class DatabaseSeeder extends Seeder
             "password" => Hash::make('password')
         ]);
 
-        Setting::create();
+        Setting::create([
+            "id" => 1,
+            "splash_slogan" => "Start your day with the sticker",
+            "app_bg_color" => '#000',
+            "app_text_color" => '#000',
+            "app_button_color" => '#44c5aa',
+            "expire_day" => 1
+        ]);
 
         $stickerCategory = Category::create([
             'id' => \Str::uuid(),
@@ -85,16 +93,18 @@ class DatabaseSeeder extends Seeder
                 "name" => "Matte",
                 "price" => 300,
                 "source_price" => 150,
-                "is_default" => 1,
-                "category_id" => $badgeCategory->id
+                "is_default" => 0,
+                "category_id" => $badgeCategory->id,
+                "is_active" => 0
             ],
             [
                 'id' => \Str::uuid(),
                 "name" => "Gloss",
                 "price" => 0,
                 "source_price" => 0,
-                "is_default" => 0,
-                "category_id" => $badgeCategory->id
+                "is_default" => 1,
+                "category_id" => $badgeCategory->id,
+                "is_active" => 1
             ]
         ]);
 
@@ -194,6 +204,15 @@ class DatabaseSeeder extends Seeder
                 "size" => "12 x 12 inches",
                 "is_default" => 0,
                 "category_id" => $posterCategory->id
+            ]
+        ]);
+
+        ShippingCity::insert([
+            [
+                'id' => \Str::uuid(),
+                "name_en" => "Out Of Area or Gate",
+                "name_mm" => 'စာဝေနယ်ပြင်ပ/ဂိတ်ချ',
+                "cost" => "1000",
             ]
         ]);
     }

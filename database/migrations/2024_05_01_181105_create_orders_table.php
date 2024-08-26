@@ -29,6 +29,7 @@ return new class extends Migration
             $table->enum('order_status', ['pending', 'confirmed', 'cancel', 'delivered'])->default('pending');
 
             $table->index(['order_status', 'created_at']);
+            $table->timestamps();
         });
     }
 

@@ -51,7 +51,7 @@ defineProps({
 
         <div class="max-w-7xl mx-auto p-6 lg:p-8">
             <div class="flex justify-center">
-                <VImg src="images/logo.png" width="200" rounded="full" height="200"></VImg>
+                <VImg src="images/logo.png" width="300" rounded="full" height="300"></VImg>
             </div>
 
             <div class="mt-16">
